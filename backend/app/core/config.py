@@ -45,6 +45,8 @@ class Settings(BaseSettings):
     S3_ACCESS_KEY_ID: str | None = None
     S3_SECRET_ACCESS_KEY: str | None = None
     S3_ENDPOINT_URL: str | None = None  # utile pour Cloudflare R2
+    UPLOAD_MAX_SIZE_MB: int = 5
+    UPLOAD_ALLOWED_CONTENT_TYPES: list[str] = ["image/jpeg", "image/png", "image/webp"]
 
     # --- Monétisation (configurable, jamais en dur dans le code métier) ---
     BUYER_PROTECTION_FEE_PERCENT: float = 5.0  # en pourcentage du prix article

@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
+import { PackageSearch } from "lucide-react";
 import { getCategories, searchListings } from "../api/endpoints";
-import ListingCard from "../components/ListingCard";
-import { COLORS } from "../theme";
+import ListingCard, { ListingCardSkeleton } from "../components/ListingCard";
+import Chip from "../components/ui/Chip";
+import EmptyState from "../components/ui/EmptyState";
 import { useAuth } from "../context/AuthContext";
+import styles from "./HomePage.module.css";
 
 export default function HomePage() {
   const { user } = useAuth();
@@ -26,59 +29,44 @@ export default function HomePage() {
   }, [activeCategory]);
 
   return (
-    <div style={{ padding: "16px 16px 80px" }}>
-      <div style={{ marginBottom: 16 }}>
-        {user && <p style={{ fontSize: 11, color: COLORS.inkSoft, margin: 0 }}>{user.city || "Côte d'Ivoire"}</p>}
-        <h1 style={{ fontSize: 22, fontWeight: 700, color: COLORS.lagoon, margin: 0, fontFamily: "'Space Grotesk', sans-serif" }}>
-          Project Market
-        </h1>
+    <div className={styles.page}>
+      <div className={styles.header}>
+        {user && <p className={styles.location}>{user.city || "Côte d'Ivoire"}</p>}
+        <h1 className={styles.title}>Project Market</h1>
       </div>
 
-      <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 8, marginBottom: 16 }}>
-        <CategoryChip label="Tout" active={!activeCategory} onClick={() => setActiveCategory(null)} />
+      <div className={styles.chips}>
+        <Chip active={!activeCategory} onClick={() => setActiveCategory(null)}>
+          Tout
+        </Chip>
         {categories.map((c) => (
-          <CategoryChip
-            key={c.id}
-            label={c.name}
-            active={activeCategory === c.id}
-            onClick={() => setActiveCategory(c.id)}
-          />
+          <Chip key={c.id} active={activeCategory === c.id} onClick={() => setActiveCategory(c.id)}>
+            {c.name}
+          </Chip>
         ))}
       </div>
 
-      {loading && <p style={{ color: COLORS.inkSoft, fontSize: 13 }}>Chargement...</p>}
-      {error && <p style={{ color: COLORS.danger, fontSize: 13 }}>{error}</p>}
+      {error && <p className={styles.error}>{error}</p>}
 
-      {!loading && !error && listings.length === 0 && (
-        <p style={{ color: COLORS.inkSoft, fontSize: 13 }}>Aucune annonce pour le moment.</p>
+      {loading ? (
+        <div className={styles.grid}>
+          {Array.from({ length: 6 }).map((_, i) => (
+            <ListingCardSkeleton key={i} />
+          ))}
+        </div>
+      ) : listings.length === 0 ? (
+        <EmptyState
+          icon={PackageSearch}
+          title="Aucune annonce pour le moment"
+          description="Reviens un peu plus tard ou explore une autre catégorie."
+        />
+      ) : (
+        <div className={styles.grid}>
+          {listings.map((l) => (
+            <ListingCard key={l.id} listing={l} />
+          ))}
+        </div>
       )}
-
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px 12px" }}>
-        {listings.map((l) => (
-          <ListingCard key={l.id} listing={l} />
-        ))}
-      </div>
     </div>
-  );
-}
-
-function CategoryChip({ label, active, onClick }) {
-  return (
-    <button
-      onClick={onClick}
-      style={{
-        flexShrink: 0,
-        fontSize: 12.5,
-        fontWeight: 500,
-        padding: "6px 14px",
-        borderRadius: 999,
-        border: "none",
-        cursor: "pointer",
-        background: active ? COLORS.coral : "#fff",
-        color: active ? COLORS.sand : COLORS.ink,
-      }}
-    >
-      {label}
-    </button>
   );
 }

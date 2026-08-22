@@ -1,12 +1,15 @@
+from pathlib import Path
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 
 from app.core.config import settings
 from app.core.exceptions import AppError
 from app.routers import (
     auth, boosts, conversations, favorites, follows, listings, notifications,
-    offers, orders, reviews, taxonomy,
+    offers, orders, reviews, taxonomy, uploads,
 )
 
 app = FastAPI(
@@ -35,6 +38,11 @@ def health_check():
     return {"status": "ok", "project": settings.PROJECT_NAME, "environment": settings.ENVIRONMENT}
 
 
+if settings.STORAGE_PROVIDER == "local":
+    Path(settings.STORAGE_LOCAL_PATH).mkdir(parents=True, exist_ok=True)
+    app.mount("/media", StaticFiles(directory=settings.STORAGE_LOCAL_PATH), name="media")
+
+
 app.include_router(auth.router, prefix=settings.API_V1_PREFIX)
 app.include_router(taxonomy.router, prefix=settings.API_V1_PREFIX)
 app.include_router(listings.router, prefix=settings.API_V1_PREFIX)
@@ -46,6 +54,7 @@ app.include_router(reviews.router, prefix=settings.API_V1_PREFIX)
 app.include_router(follows.router, prefix=settings.API_V1_PREFIX)
 app.include_router(boosts.router, prefix=settings.API_V1_PREFIX)
 app.include_router(notifications.router, prefix=settings.API_V1_PREFIX)
+app.include_router(uploads.router, prefix=settings.API_V1_PREFIX)
 
 # Les prochains routers (listings, search, offers, orders, ...) seront
 # ajoutés au fil des phases suivantes, en suivant le même pattern.

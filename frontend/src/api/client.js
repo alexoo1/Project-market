@@ -90,12 +90,30 @@ async function tryRefresh() {
   }
 }
 
+async function uploadFiles(path, files) {
+  const formData = new FormData();
+  for (const file of files) formData.append("files", file);
+
+  const headers = {};
+  const token = getAccessToken();
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+
+  const res = await fetch(`${BASE_URL}${path}`, { method: "POST", headers, body: formData });
+
+  const data = await res.json().catch(() => null);
+  if (!res.ok) {
+    throw new ApiError(data?.detail || `Erreur ${res.status}`, res.status);
+  }
+  return data;
+}
+
 export const api = {
   get: (path, opts) => request(path, { ...opts, method: "GET" }),
   post: (path, body, opts) => request(path, { ...opts, method: "POST", body }),
   patch: (path, body, opts) => request(path, { ...opts, method: "PATCH", body }),
   delete: (path, opts) => request(path, { ...opts, method: "DELETE" }),
   put: (path, body, opts) => request(path, { ...opts, method: "PUT", body }),
+  upload: (path, files) => uploadFiles(path, files),
 };
 
 export { ApiError };

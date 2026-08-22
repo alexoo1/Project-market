@@ -1,0 +1,31 @@
+.stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.filled {
+  color: var(--color-coral);
+}
+
+.empty {
+  color: var(--color-border);
+}
+
+.interactive {
+  gap: var(--space-1);
+}
+
+.starButton {
+  border: none;
+  background: none;
+  padding: var(--space-1);
+  cursor: pointer;
+  display: flex;
+  color: inherit;
+  transition: transform var(--duration-fast) var(--ease-standard);
+}
+
+.starButton:active {
+  transform: scale(0.9);
+}

@@ -29,6 +29,11 @@ export function getBrands() {
   return api.get("/brands", { auth: false });
 }
 
+// --- Uploads ---
+export function uploadImages(files) {
+  return api.upload("/uploads/images", files);
+}
+
 // --- Listings ---
 export function searchListings(params = {}) {
   const query = new URLSearchParams(
@@ -86,6 +91,9 @@ export function startConversation(listingId) {
 }
 export function getConversations() {
   return api.get("/conversations");
+}
+export function getConversation(id) {
+  return api.get(`/conversations/${id}`);
 }
 export function getMessages(conversationId) {
   return api.get(`/conversations/${conversationId}/messages`);

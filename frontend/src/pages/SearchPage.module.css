@@ -1,0 +1,51 @@
+.page {
+  padding: var(--space-4) var(--space-4) 88px;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.searchRow {
+  margin-bottom: var(--space-3);
+}
+
+.chipsRow {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.total {
+  font-size: var(--text-xs);
+  color: var(--color-ink-soft);
+  margin: 0 0 var(--space-3);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4) var(--space-3);
+}
+
+@media (min-width: 640px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-6) var(--space-4);
+  }
+}
+
+.sheetForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.priceRange {
+  display: flex;
+  gap: var(--space-3);
+}

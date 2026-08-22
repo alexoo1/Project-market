@@ -1,8 +1,17 @@
 import { useEffect, useState } from "react";
+import { Search as SearchIcon, SlidersHorizontal, SearchX } from "lucide-react";
 import { searchListings } from "../api/endpoints";
-import ListingCard from "../components/ListingCard";
-import { COLORS } from "../theme";
-import { inputStyle } from "./LoginPage";
+import ListingCard, { ListingCardSkeleton } from "../components/ListingCard";
+import SearchInput from "../components/ui/SearchInput";
+import FilterChip from "../components/ui/FilterChip";
+import BottomSheet from "../components/ui/BottomSheet";
+import Input from "../components/ui/Input";
+import Select from "../components/ui/Select";
+import Button from "../components/ui/Button";
+import EmptyState from "../components/ui/EmptyState";
+import styles from "./SearchPage.module.css";
+
+const SORT_LABELS = { recent: "Nouveautés", price_asc: "Prix croissant", price_desc: "Prix décroissant" };
 
 export default function SearchPage() {
   const [q, setQ] = useState("");
@@ -13,6 +22,7 @@ export default function SearchPage() {
   const [listings, setListings] = useState([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [sheetOpen, setSheetOpen] = useState(false);
 
   const runSearch = () => {
     setLoading(true);
@@ -36,74 +46,70 @@ export default function SearchPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const applyFilters = () => {
+    setSheetOpen(false);
+    runSearch();
+  };
+
+  const activeFilterCount = [priceMin, priceMax, city].filter(Boolean).length;
+
   return (
-    <div style={{ padding: "16px 16px 80px" }}>
-      <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
-        <input
+    <div className={styles.page}>
+      <div className={styles.searchRow}>
+        <SearchInput
           placeholder="Rechercher un article, une marque..."
           value={q}
           onChange={(e) => setQ(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && runSearch()}
-          style={{ ...inputStyle, flex: 1, background: "#fff" }}
+          onClear={() => setQ("")}
         />
-        <button
-          onClick={runSearch}
-          style={{
-            width: 44, borderRadius: 22, border: "none", background: COLORS.lagoon, color: COLORS.sand,
-            cursor: "pointer",
-          }}
-        >
-          🔍
-        </button>
       </div>
 
-      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 16 }}>
-        <input
-          placeholder="Prix min"
-          type="number"
-          value={priceMin}
-          onChange={(e) => setPriceMin(e.target.value)}
-          style={{ ...inputStyle, width: 100, background: "#fff", padding: "8px 12px" }}
-        />
-        <input
-          placeholder="Prix max"
-          type="number"
-          value={priceMax}
-          onChange={(e) => setPriceMax(e.target.value)}
-          style={{ ...inputStyle, width: 100, background: "#fff", padding: "8px 12px" }}
-        />
-        <input
-          placeholder="Ville"
-          value={city}
-          onChange={(e) => setCity(e.target.value)}
-          style={{ ...inputStyle, width: 120, background: "#fff", padding: "8px 12px" }}
-        />
-        <select
-          value={sort}
-          onChange={(e) => setSort(e.target.value)}
-          style={{ ...inputStyle, background: "#fff", padding: "8px 12px" }}
-        >
-          <option value="recent">Nouveautés</option>
-          <option value="price_asc">Prix croissant</option>
-          <option value="price_desc">Prix décroissant</option>
-        </select>
-        <button onClick={runSearch} style={{ ...inputStyle, background: COLORS.coral, color: "#fff", border: "none", cursor: "pointer" }}>
-          Filtrer
-        </button>
+      <div className={styles.chipsRow}>
+        <FilterChip icon={SlidersHorizontal} active={activeFilterCount > 0} onClick={() => setSheetOpen(true)}>
+          Filtres{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
+        </FilterChip>
+        <FilterChip active onClick={() => setSheetOpen(true)}>
+          {SORT_LABELS[sort]}
+        </FilterChip>
       </div>
 
       {loading ? (
-        <p style={{ color: COLORS.inkSoft, fontSize: 13 }}>Recherche...</p>
+        <div className={styles.grid}>
+          {Array.from({ length: 6 }).map((_, i) => (
+            <ListingCardSkeleton key={i} />
+          ))}
+        </div>
+      ) : listings.length === 0 ? (
+        <EmptyState icon={SearchX} title="Aucun résultat" description="Essaie d'autres mots-clés ou ajuste tes filtres." />
       ) : (
         <>
-          <p style={{ color: COLORS.inkSoft, fontSize: 12, marginBottom: 12 }}>{total} résultat(s)</p>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px 12px" }}>
+          <p className={styles.total}>{total} résultat{total > 1 ? "s" : ""}</p>
+          <div className={styles.grid}>
             {listings.map((l) => (
               <ListingCard key={l.id} listing={l} />
             ))}
           </div>
         </>
       )}
+
+      <BottomSheet open={sheetOpen} onClose={() => setSheetOpen(false)} title="Filtres">
+        <div className={styles.sheetForm}>
+          <div className={styles.priceRange}>
+            <Input placeholder="Prix min" type="number" value={priceMin} onChange={(e) => setPriceMin(e.target.value)} />
+            <Input placeholder="Prix max" type="number" value={priceMax} onChange={(e) => setPriceMax(e.target.value)} />
+          </div>
+          <Input placeholder="Ville" value={city} onChange={(e) => setCity(e.target.value)} />
+          <Select label="Trier par" value={sort} onChange={(e) => setSort(e.target.value)}>
+            {Object.entries(SORT_LABELS).map(([val, label]) => (
+              <option key={val} value={val}>{label}</option>
+            ))}
+          </Select>
+          <Button fullWidth size="lg" onClick={applyFilters}>
+            <SearchIcon size={16} strokeWidth={2} /> Appliquer
+          </Button>
+        </div>
+      </BottomSheet>
     </div>
   );
 }

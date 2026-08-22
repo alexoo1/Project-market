@@ -1,24 +1,36 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getCategories, getBrands, createListing } from "../api/endpoints";
-import { COLORS, CONDITION_LABELS } from "../theme";
+import { ArrowLeft, ArrowRight, ImagePlus, X, Check } from "lucide-react";
+import { getCategories, getBrands, createListing, uploadImages } from "../api/endpoints";
+import { formatFCFA, CONDITION_LABELS } from "../theme";
 import { useAuth } from "../context/AuthContext";
+import { useToast } from "../components/ui/ToastProvider";
 import { ApiError } from "../api/client";
-import { inputStyle, buttonStyle } from "./LoginPage";
+import Input from "../components/ui/Input";
+import Button from "../components/ui/Button";
+import IconButton from "../components/ui/IconButton";
+import Chip from "../components/ui/Chip";
+import styles from "./SellPage.module.css";
+
+const STEPS = ["Photos", "Titre", "Catégorie", "Détails", "Description", "Prix & lieu", "Aperçu"];
+
+const emptyForm = {
+  title: "", description: "", category_id: "", brand_id: "", size: "", color: "",
+  condition: "good", price: "", city: "", district: "",
+};
 
 export default function SellPage() {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const toast = useToast();
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
-  const [imageUrl, setImageUrl] = useState("");
   const [images, setImages] = useState([]);
-  const [error, setError] = useState(null);
+  const [uploading, setUploading] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [form, setForm] = useState({
-    title: "", description: "", category_id: "", brand_id: "", size: "", color: "",
-    condition: "good", price: "", city: "", district: "",
-  });
+  const [step, setStep] = useState(0);
+  const fileInputRef = useRef(null);
+  const [form, setForm] = useState(emptyForm);
 
   useEffect(() => {
     getCategories().then(setCategories).catch(() => {});
@@ -32,22 +44,40 @@ export default function SellPage() {
 
   const set = (field) => (e) => setForm((f) => ({ ...f, [field]: e.target.value }));
 
-  const addImage = () => {
-    if (!imageUrl.trim()) return;
-    if (images.length >= 8) return;
-    setImages((imgs) => [...imgs, imageUrl.trim()]);
-    setImageUrl("");
-  };
-
   const removeImage = (idx) => setImages((imgs) => imgs.filter((_, i) => i !== idx));
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError(null);
-    if (images.length === 0) {
-      setError("Ajoute au moins une photo (une URL d'image).");
-      return;
+  const handleFilesSelected = async (e) => {
+    const files = Array.from(e.target.files || []).slice(0, 8 - images.length);
+    e.target.value = "";
+    if (files.length === 0) return;
+    setUploading(true);
+    try {
+      const { images: uploaded } = await uploadImages(files);
+      setImages((imgs) => [...imgs, ...uploaded.map((img) => img.url)]);
+    } catch (err) {
+      toast.error(err instanceof ApiError ? err.message : "Erreur lors de l'envoi des photos.");
+    } finally {
+      setUploading(false);
     }
+  };
+
+  const categoryName = categories.find((c) => c.id === form.category_id)?.name;
+  const brandName = brands.find((b) => b.id === form.brand_id)?.name;
+
+  const stepValid = [
+    images.length > 0,
+    form.title.trim().length >= 3,
+    form.category_id !== "",
+    true,
+    form.description.trim().length >= 10,
+    Number(form.price) > 0 && form.city.trim() !== "",
+    true,
+  ][step];
+
+  const goNext = () => setStep((s) => Math.min(s + 1, STEPS.length - 1));
+  const goBack = () => (step === 0 ? navigate(-1) : setStep((s) => s - 1));
+
+  const handlePublish = async () => {
     setBusy(true);
     try {
       const payload = {
@@ -58,110 +88,188 @@ export default function SellPage() {
         images: images.map((url) => ({ url })),
       };
       const listing = await createListing(payload);
+      toast.success("Annonce publiée !");
       navigate(`/listings/${listing.id}`);
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Erreur lors de la publication.");
+      toast.error(err instanceof ApiError ? err.message : "Erreur lors de la publication.");
     } finally {
       setBusy(false);
     }
   };
 
   return (
-    <div style={{ padding: "20px 16px 100px", maxWidth: 480, margin: "0 auto" }}>
-      <h1 style={{ fontSize: 20, fontWeight: 700, color: COLORS.lagoon }}>Publier un article</h1>
-
-      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 16 }}>
-        <div>
-          <label style={labelStyle}>Photos ({images.length}/8)</label>
-          <div style={{ display: "flex", gap: 8 }}>
-            <input
-              placeholder="URL d'une photo"
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
-              style={{ ...inputStyle, flex: 1 }}
-            />
-            <button type="button" onClick={addImage} style={{ ...buttonStyle, background: COLORS.coral }}>
-              Ajouter
-            </button>
+    <div className={styles.page}>
+      <div className={styles.header}>
+        <IconButton icon={ArrowLeft} label="Précédent" onClick={goBack} />
+        <div className={styles.progress}>
+          <div className={styles.progressTrack}>
+            <div className={styles.progressFill} style={{ width: `${((step + 1) / STEPS.length) * 100}%` }} />
           </div>
-          {images.length > 0 && (
-            <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 8 }}>
-              {images.map((url, idx) => (
-                <div key={idx} style={{ position: "relative", width: 56, height: 56 }}>
-                  <img src={url} alt="" style={{ width: 56, height: 56, objectFit: "cover", borderRadius: 8 }} />
-                  <button
-                    type="button"
-                    onClick={() => removeImage(idx)}
-                    style={{
-                      position: "absolute", top: -6, right: -6, width: 18, height: 18, borderRadius: "50%",
-                      background: COLORS.danger, color: "#fff", border: "none", fontSize: 10, cursor: "pointer",
-                    }}
-                  >
-                    ✕
-                  </button>
-                </div>
+          <p className={styles.progressLabel}>{STEPS[step]} · {step + 1}/{STEPS.length}</p>
+        </div>
+      </div>
+
+      <div className={styles.content}>
+        {step === 0 && (
+          <StepPhotos
+            images={images}
+            uploading={uploading}
+            fileInputRef={fileInputRef}
+            onSelect={handleFilesSelected}
+            onRemove={removeImage}
+          />
+        )}
+
+        {step === 1 && (
+          <StepShell title="Comment veux-tu appeler ton article ?">
+            <Input placeholder="Ex. Veste en jean oversize" value={form.title} onChange={set("title")} autoFocus />
+          </StepShell>
+        )}
+
+        {step === 2 && (
+          <StepShell title="Dans quelle catégorie ?">
+            <div className={styles.chipGrid}>
+              {categories.map((c) => (
+                <Chip key={c.id} active={form.category_id === c.id} onClick={() => setForm((f) => ({ ...f, category_id: c.id }))}>
+                  {c.name}
+                </Chip>
               ))}
             </div>
-          )}
-        </div>
+            <p className={styles.subLabel}>Marque (facultatif)</p>
+            <div className={styles.chipGrid}>
+              {brands.map((b) => (
+                <Chip
+                  key={b.id}
+                  active={form.brand_id === b.id}
+                  onClick={() => setForm((f) => ({ ...f, brand_id: f.brand_id === b.id ? "" : b.id }))}
+                >
+                  {b.name}
+                </Chip>
+              ))}
+            </div>
+          </StepShell>
+        )}
 
-        <input placeholder="Titre" value={form.title} onChange={set("title")} required style={inputStyle} />
-        <textarea
-          placeholder="Description"
-          value={form.description}
-          onChange={set("description")}
-          required
-          rows={4}
-          style={{ ...inputStyle, borderRadius: 16, resize: "vertical" }}
-        />
+        {step === 3 && (
+          <StepShell title="Quelques détails">
+            <div className={styles.row}>
+              <Input placeholder="Taille (facultatif)" value={form.size} onChange={set("size")} />
+              <Input placeholder="Couleur (facultatif)" value={form.color} onChange={set("color")} />
+            </div>
+            <p className={styles.subLabel}>État</p>
+            <div className={styles.chipGrid}>
+              {Object.entries(CONDITION_LABELS).map(([val, label]) => (
+                <Chip key={val} active={form.condition === val} onClick={() => setForm((f) => ({ ...f, condition: val }))}>
+                  {label}
+                </Chip>
+              ))}
+            </div>
+          </StepShell>
+        )}
 
-        <select value={form.category_id} onChange={set("category_id")} required style={inputStyle}>
-          <option value="">Catégorie</option>
-          {categories.map((c) => (
-            <option key={c.id} value={c.id}>{c.name}</option>
-          ))}
-        </select>
+        {step === 4 && (
+          <StepShell title="Décris ton article">
+            <textarea
+              placeholder="Matière, coupe, défauts éventuels, raison de la vente..."
+              aria-label="Description de l'article"
+              value={form.description}
+              onChange={set("description")}
+              rows={7}
+              className={styles.textarea}
+              autoFocus
+            />
+          </StepShell>
+        )}
 
-        <select value={form.brand_id} onChange={set("brand_id")} style={inputStyle}>
-          <option value="">Marque (facultatif)</option>
-          {brands.map((b) => (
-            <option key={b.id} value={b.id}>{b.name}</option>
-          ))}
-        </select>
+        {step === 5 && (
+          <StepShell title="Prix et localisation">
+            <Input placeholder="Prix en FCFA" type="number" value={form.price} onChange={set("price")} />
+            <div className={styles.row}>
+              <Input placeholder="Ville" value={form.city} onChange={set("city")} />
+              <Input placeholder="Quartier (facultatif)" value={form.district} onChange={set("district")} />
+            </div>
+          </StepShell>
+        )}
 
-        <div style={{ display: "flex", gap: 8 }}>
-          <input placeholder="Taille" value={form.size} onChange={set("size")} style={{ ...inputStyle, flex: 1 }} />
-          <input placeholder="Couleur" value={form.color} onChange={set("color")} style={{ ...inputStyle, flex: 1 }} />
-        </div>
+        {step === 6 && (
+          <StepPreview
+            images={images}
+            form={form}
+            categoryName={categoryName}
+            brandName={brandName}
+          />
+        )}
+      </div>
 
-        <select value={form.condition} onChange={set("condition")} required style={inputStyle}>
-          {Object.entries(CONDITION_LABELS).map(([val, label]) => (
-            <option key={val} value={val}>{label}</option>
-          ))}
-        </select>
-
-        <input
-          placeholder="Prix en FCFA"
-          type="number"
-          value={form.price}
-          onChange={set("price")}
-          required
-          style={inputStyle}
-        />
-
-        <div style={{ display: "flex", gap: 8 }}>
-          <input placeholder="Ville" value={form.city} onChange={set("city")} required style={{ ...inputStyle, flex: 1 }} />
-          <input placeholder="Quartier" value={form.district} onChange={set("district")} style={{ ...inputStyle, flex: 1 }} />
-        </div>
-
-        {error && <p style={{ color: COLORS.danger, fontSize: 13 }}>{error}</p>}
-
-        <button type="submit" disabled={busy} style={buttonStyle}>
-          {busy ? "Publication..." : "Publier l'article"}
-        </button>
-      </form>
+      <div className={styles.footer}>
+        {step < STEPS.length - 1 ? (
+          <Button fullWidth size="lg" disabled={!stepValid || uploading} onClick={goNext}>
+            Continuer <ArrowRight size={16} strokeWidth={2.5} />
+          </Button>
+        ) : (
+          <Button fullWidth size="lg" loading={busy} onClick={handlePublish}>
+            <Check size={16} strokeWidth={2.5} /> Publier l'annonce
+          </Button>
+        )}
+      </div>
     </div>
   );
 }
 
-const labelStyle = { fontSize: 12, color: COLORS.inkSoft, marginBottom: 4, display: "block" };
+function StepShell({ title, children }) {
+  return (
+    <div className={styles.step}>
+      <h2 className={styles.stepTitle}>{title}</h2>
+      {children}
+    </div>
+  );
+}
+
+function StepPhotos({ images, uploading, fileInputRef, onSelect, onRemove }) {
+  return (
+    <StepShell title="Ajoute des photos">
+      <input ref={fileInputRef} type="file" accept="image/*" multiple onChange={onSelect} className={styles.hiddenInput} />
+      <div className={styles.photoGrid}>
+        {images.map((url, idx) => (
+          <div key={idx} className={styles.photoTile}>
+            <img src={url} alt="" />
+            <button type="button" onClick={() => onRemove(idx)} className={styles.photoRemove} aria-label="Retirer la photo">
+              <X size={12} strokeWidth={2.5} />
+            </button>
+          </div>
+        ))}
+        {images.length < 8 && (
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploading}
+            className={styles.photoAdd}
+          >
+            <ImagePlus size={22} strokeWidth={1.75} />
+            <span>{uploading ? "Envoi..." : "Ajouter"}</span>
+          </button>
+        )}
+      </div>
+      <p className={styles.hint}>{images.length}/8 photos — la première sera la couverture de l'annonce.</p>
+    </StepShell>
+  );
+}
+
+function StepPreview({ images, form, categoryName, brandName }) {
+  return (
+    <StepShell title="Vérifie ton annonce">
+      <div className={styles.previewCard}>
+        {images[0] && <img src={images[0]} alt="" className={styles.previewImage} />}
+        <div className={styles.previewBody}>
+          <p className={styles.previewPrice}>{form.price ? formatFCFA(Number(form.price)) : "—"}</p>
+          <p className={styles.previewTitle}>{form.title}</p>
+          <p className={styles.previewMeta}>
+            {[categoryName, brandName, CONDITION_LABELS[form.condition]].filter(Boolean).join(" · ")}
+          </p>
+          <p className={styles.previewMeta}>{[form.city, form.district].filter(Boolean).join(", ")}</p>
+          <p className={styles.previewDescription}>{form.description}</p>
+        </div>
+      </div>
+    </StepShell>
+  );
+}

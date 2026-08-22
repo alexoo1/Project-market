@@ -1,13 +1,38 @@
 import { useEffect, useRef, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { getMessages, sendMessage } from "../api/endpoints";
-import { COLORS } from "../theme";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import { ArrowLeft, Send, Check, CheckCheck } from "lucide-react";
+import { getMessages, sendMessage, getConversation } from "../api/endpoints";
 import { useAuth } from "../context/AuthContext";
+import IconButton from "../components/ui/IconButton";
+import UserAvatar from "../components/ui/UserAvatar";
+import Skeleton from "../components/ui/Skeleton";
+import { formatMessageTime } from "../utils/formatTime";
+import styles from "./ChatPage.module.css";
+
+function UserHeader({ other, listing }) {
+  const content = (
+    <>
+      <UserAvatar name={other.display_name} src={other.profile_photo_url} size="sm" />
+      <div>
+        <p className={styles.headerName}>{other.display_name}</p>
+        {listing && <p className={styles.headerListing}>{listing.title}</p>}
+      </div>
+    </>
+  );
+  return listing ? (
+    <Link to={`/listings/${listing.id}`} className={styles.headerUser}>
+      {content}
+    </Link>
+  ) : (
+    <div className={styles.headerUser}>{content}</div>
+  );
+}
 
 export default function ChatPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const [conversation, setConversation] = useState(null);
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(true);
@@ -16,6 +41,7 @@ export default function ChatPage() {
   const load = () => getMessages(id).then(setMessages).finally(() => setLoading(false));
 
   useEffect(() => {
+    getConversation(id).then(setConversation).catch(() => {});
     load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
@@ -33,26 +59,33 @@ export default function ChatPage() {
     load();
   };
 
+  const other = conversation?.other_participant;
+
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "12px 16px", borderBottom: `1px solid ${COLORS.sandDeep}` }}>
-        <button onClick={() => navigate(-1)} style={{ border: "none", background: "none", fontSize: 18, cursor: "pointer" }}>←</button>
-        <p style={{ margin: 0, fontWeight: 600, fontSize: 14 }}>Conversation</p>
+    <div className={styles.page}>
+      <div className={styles.header}>
+        <IconButton icon={ArrowLeft} label="Retour" onClick={() => navigate(-1)} />
+        {other ? (
+          <UserHeader other={other} listing={conversation.listing} />
+        ) : (
+          <Skeleton variant="circle" width={32} height={32} />
+        )}
       </div>
 
-      <div style={{ flex: 1, overflowY: "auto", padding: 16, display: "flex", flexDirection: "column", gap: 8 }}>
-        {loading && <p style={{ color: COLORS.inkSoft, fontSize: 13 }}>Chargement...</p>}
+      <div className={styles.thread}>
+        {loading && (
+          <div className={styles.loadingState}>
+            <Skeleton variant="text" width="50%" />
+          </div>
+        )}
         {messages.map((m) => {
           const isMine = m.sender_id === user?.id;
           return (
-            <div key={m.id} style={{ display: "flex", justifyContent: isMine ? "flex-end" : "flex-start" }}>
-              <div
-                style={{
-                  maxWidth: "75%", padding: "8px 14px", borderRadius: 16, fontSize: 13.5,
-                  background: isMine ? COLORS.lagoon : "#fff", color: isMine ? COLORS.sand : COLORS.ink,
-                }}
-              >
-                {m.content}
+            <div key={m.id} className={[styles.messageRow, isMine ? styles.mine : styles.theirs].join(" ")}>
+              <div className={styles.bubble}>{m.content}</div>
+              <div className={styles.meta}>
+                <span>{formatMessageTime(m.created_at)}</span>
+                {isMine && (m.is_read ? <CheckCheck size={13} strokeWidth={2} /> : <Check size={13} strokeWidth={2} />)}
               </div>
             </div>
           );
@@ -60,16 +93,15 @@ export default function ChatPage() {
         <div ref={bottomRef} />
       </div>
 
-      <form onSubmit={handleSend} style={{ display: "flex", gap: 8, padding: 12, borderTop: `1px solid ${COLORS.sandDeep}` }}>
+      <form onSubmit={handleSend} className={styles.composer}>
         <input
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="Écrire un message..."
-          style={{ flex: 1, padding: "10px 16px", borderRadius: 999, border: `1px solid ${COLORS.sandDeep}`, fontSize: 13.5 }}
+          aria-label="Écrire un message"
+          className={styles.input}
         />
-        <button type="submit" style={{ width: 40, height: 40, borderRadius: "50%", border: "none", background: COLORS.coral, color: "#fff", cursor: "pointer" }}>
-          ➤
-        </button>
+        <IconButton icon={Send} label="Envoyer" variant="filled" type="submit" disabled={!text.trim()} />
       </form>
     </div>
   );

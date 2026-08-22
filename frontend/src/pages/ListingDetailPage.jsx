@@ -1,23 +1,40 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { ArrowLeft, MapPin, MessageCircle, Tag } from "lucide-react";
 import {
   getListing, createOffer, purchaseListing, startConversation,
 } from "../api/endpoints";
-import { COLORS, formatFCFA, CONDITION_LABELS, DELIVERY_METHOD_LABELS } from "../theme";
+import { formatFCFA, CONDITION_LABELS, DELIVERY_METHOD_LABELS } from "../theme";
 import { useAuth } from "../context/AuthContext";
+import { useToast } from "../components/ui/ToastProvider";
 import { ApiError } from "../api/client";
+import ImageGallery from "../components/ui/ImageGallery";
+import IconButton from "../components/ui/IconButton";
+import Button from "../components/ui/Button";
+import Chip from "../components/ui/Chip";
+import Badge from "../components/ui/Badge";
+import UserAvatar from "../components/ui/UserAvatar";
+import RatingStars from "../components/ui/RatingStars";
+import Select from "../components/ui/Select";
+import Input from "../components/ui/Input";
+import BottomSheet from "../components/ui/BottomSheet";
+import Skeleton from "../components/ui/Skeleton";
+import styles from "./ListingDetailPage.module.css";
+
+const STATUS_TONE = { active: "success", sold: "neutral", reserved: "warning", draft: "neutral" };
+const STATUS_LABEL = { active: "Disponible", sold: "Vendu", reserved: "Réservé", draft: "Brouillon" };
 
 export default function ListingDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const toast = useToast();
   const [listing, setListing] = useState(null);
   const [error, setError] = useState(null);
   const [showOffer, setShowOffer] = useState(false);
   const [offerAmount, setOfferAmount] = useState("");
   const [deliveryMethod, setDeliveryMethod] = useState("hand_delivery");
   const [busy, setBusy] = useState(false);
-  const [message, setMessage] = useState(null);
 
   useEffect(() => {
     getListing(id).then(setListing).catch(() => setError("Annonce introuvable."));
@@ -29,14 +46,13 @@ export default function ListingDetailPage() {
     e.preventDefault();
     if (!user) return navigate("/login");
     setBusy(true);
-    setMessage(null);
     try {
       await createOffer(id, Number(offerAmount));
-      setMessage({ type: "success", text: "Offre envoyée !" });
+      toast.success("Offre envoyée !");
       setShowOffer(false);
       setOfferAmount("");
     } catch (err) {
-      setMessage({ type: "error", text: err instanceof ApiError ? err.message : "Erreur" });
+      toast.error(err instanceof ApiError ? err.message : "Erreur");
     } finally {
       setBusy(false);
     }
@@ -45,12 +61,11 @@ export default function ListingDetailPage() {
   const handleBuy = async () => {
     if (!user) return navigate("/login");
     setBusy(true);
-    setMessage(null);
     try {
       const order = await purchaseListing(id, { delivery_method: deliveryMethod, payment_method: "mock" });
       navigate(`/orders/${order.id}`);
     } catch (err) {
-      setMessage({ type: "error", text: err instanceof ApiError ? err.message : "Erreur" });
+      toast.error(err instanceof ApiError ? err.message : "Erreur");
     } finally {
       setBusy(false);
     }
@@ -62,130 +77,116 @@ export default function ListingDetailPage() {
       const conv = await startConversation(id);
       navigate(`/messages/${conv.id}`);
     } catch (err) {
-      setMessage({ type: "error", text: err instanceof ApiError ? err.message : "Erreur" });
+      toast.error(err instanceof ApiError ? err.message : "Erreur");
     }
   };
 
-  if (error) return <div style={{ padding: 20, color: COLORS.danger }}>{error}</div>;
-  if (!listing) return <div style={{ padding: 20, color: COLORS.inkSoft }}>Chargement...</div>;
+  if (error) {
+    return (
+      <div className={styles.page}>
+        <IconButton icon={ArrowLeft} label="Retour" variant="solid" onClick={() => navigate(-1)} />
+        <p className={styles.errorText}>{error}</p>
+      </div>
+    );
+  }
+
+  if (!listing) {
+    return (
+      <div className={styles.page}>
+        <Skeleton height={480} />
+        <div className={styles.body}>
+          <Skeleton variant="text" width="40%" height={28} />
+          <Skeleton variant="text" width="70%" style={{ marginTop: 10 }} />
+          <Skeleton variant="text" width="90%" style={{ marginTop: 16 }} />
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div style={{ paddingBottom: 100 }}>
-      <div style={{ position: "relative", aspectRatio: "4/5", background: "#eee" }}>
-        {listing.images?.[0] ? (
-          <img
-            src={listing.images[0].url}
-            alt={listing.title}
-            style={{ width: "100%", height: "100%", objectFit: "cover" }}
-          />
-        ) : (
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", color: COLORS.inkSoft }}>
-            Pas de photo
-          </div>
-        )}
-        <button
+    <div className={styles.page}>
+      <div className={styles.heroWrap}>
+        <ImageGallery images={listing.images} alt={listing.title} />
+        <IconButton
+          icon={ArrowLeft}
+          label="Retour"
+          variant="solid"
           onClick={() => navigate(-1)}
-          style={{
-            position: "absolute", top: 12, left: 12, width: 36, height: 36, borderRadius: "50%",
-            border: "none", background: "rgba(255,255,255,0.9)", cursor: "pointer",
-          }}
-        >
-          ←
-        </button>
+          className={styles.backButton}
+        />
       </div>
 
-      <div style={{ padding: 16 }}>
-        <p style={{ fontSize: 24, fontWeight: 700, margin: 0, color: COLORS.ink }}>{formatFCFA(listing.price)}</p>
-        <p style={{ fontSize: 15, margin: "4px 0", color: COLORS.ink }}>{listing.title}</p>
-        <p style={{ fontSize: 13, color: COLORS.inkSoft }}>{listing.description}</p>
+      <div className={styles.body}>
+        <div className={styles.priceRow}>
+          <p className={styles.price}>{formatFCFA(listing.price)}</p>
+          <Badge tone={STATUS_TONE[listing.status] || "neutral"}>{STATUS_LABEL[listing.status] || listing.status}</Badge>
+        </div>
+        <p className={styles.title}>{listing.title}</p>
 
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 6, margin: "12px 0" }}>
+        <div className={styles.tags}>
           {[CONDITION_LABELS[listing.condition], listing.size, listing.color].filter(Boolean).map((tag) => (
-            <span key={tag} style={{ fontSize: 11.5, padding: "4px 10px", borderRadius: 999, background: COLORS.sandDeep }}>
-              {tag}
-            </span>
+            <Chip key={tag}>{tag}</Chip>
           ))}
         </div>
 
-        <p style={{ fontSize: 12, color: COLORS.inkSoft }}>
-          📍 {listing.city} · Statut: {listing.status}
+        <p className={styles.location}>
+          <MapPin size={14} strokeWidth={2} aria-hidden="true" /> {listing.city}
         </p>
 
+        <p className={styles.description}>{listing.description}</p>
+
         {listing.seller && (
-          <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "12px 0", borderTop: `1px solid ${COLORS.sandDeep}`, borderBottom: `1px solid ${COLORS.sandDeep}`, margin: "12px 0" }}>
-            <div style={{ width: 40, height: 40, borderRadius: "50%", background: COLORS.lagoon, color: COLORS.sand, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 600 }}>
-              {listing.seller.display_name?.slice(0, 2).toUpperCase()}
-            </div>
+          <div className={styles.sellerRow}>
+            <UserAvatar name={listing.seller.display_name} src={listing.seller.profile_photo_url} />
             <div>
-              <p style={{ fontSize: 13.5, fontWeight: 500, margin: 0 }}>{listing.seller.display_name}</p>
-              <p style={{ fontSize: 11.5, color: COLORS.inkSoft, margin: 0 }}>
-                ⭐ {listing.seller.average_rating} ({listing.seller.review_count} avis)
-              </p>
+              <p className={styles.sellerName}>{listing.seller.display_name}</p>
+              <div className={styles.sellerRating}>
+                <RatingStars value={listing.seller.average_rating} size={13} />
+                <span>({listing.seller.review_count})</span>
+              </div>
             </div>
           </div>
         )}
 
-        {message && (
-          <p style={{ fontSize: 13, color: message.type === "error" ? COLORS.danger : COLORS.lagoon }}>
-            {message.text}
-          </p>
-        )}
+        {isOwner && <p className={styles.ownerNote}>C'est ton annonce.</p>}
 
         {!isOwner && listing.status === "active" && (
-          <>
-            <div style={{ marginBottom: 12 }}>
-              <label style={{ fontSize: 12, color: COLORS.inkSoft }}>Mode de livraison</label>
-              <select
-                value={deliveryMethod}
-                onChange={(e) => setDeliveryMethod(e.target.value)}
-                style={{ width: "100%", padding: 10, borderRadius: 12, border: `1px solid ${COLORS.sandDeep}`, marginTop: 4 }}
-              >
-                {Object.entries(DELIVERY_METHOD_LABELS).map(([val, label]) => (
-                  <option key={val} value={val}>{label}</option>
-                ))}
-              </select>
-            </div>
-
-            <div style={{ display: "flex", gap: 8 }}>
-              <button onClick={handleMessage} style={secondaryBtn}>Message</button>
-              <button onClick={() => setShowOffer(true)} style={secondaryBtn}>Faire une offre</button>
-              <button onClick={handleBuy} disabled={busy} style={primaryBtn}>Acheter</button>
-            </div>
-          </>
-        )}
-
-        {isOwner && (
-          <p style={{ fontSize: 13, color: COLORS.inkSoft, fontStyle: "italic" }}>
-            C'est ton annonce.
-          </p>
-        )}
-
-        {showOffer && (
-          <form onSubmit={handleOffer} style={{ marginTop: 16, padding: 16, background: "#fff", borderRadius: 16 }}>
-            <p style={{ fontSize: 14, fontWeight: 600, margin: "0 0 8px" }}>Faire une offre</p>
-            <input
-              type="number"
-              placeholder="Montant en FCFA"
-              value={offerAmount}
-              onChange={(e) => setOfferAmount(e.target.value)}
-              required
-              style={{ width: "100%", padding: 10, borderRadius: 12, border: `1px solid ${COLORS.sandDeep}`, marginBottom: 8 }}
-            />
-            <button type="submit" disabled={busy} style={{ ...primaryBtn, width: "100%" }}>
-              Envoyer l'offre
-            </button>
-          </form>
+          <div className={styles.deliveryField}>
+            <Select label="Mode de livraison" value={deliveryMethod} onChange={(e) => setDeliveryMethod(e.target.value)}>
+              {Object.entries(DELIVERY_METHOD_LABELS).map(([val, label]) => (
+                <option key={val} value={val}>{label}</option>
+              ))}
+            </Select>
+          </div>
         )}
       </div>
+
+      {!isOwner && listing.status === "active" && (
+        <div className={styles.actionBar}>
+          <IconButton icon={MessageCircle} label="Envoyer un message" variant="solid" onClick={handleMessage} />
+          <Button variant="secondary" onClick={() => setShowOffer(true)} className={styles.offerButton}>
+            <Tag size={15} strokeWidth={2} /> Faire une offre
+          </Button>
+          <Button variant="primary" onClick={handleBuy} loading={busy} className={styles.buyButton}>
+            Acheter
+          </Button>
+        </div>
+      )}
+
+      <BottomSheet open={showOffer} onClose={() => setShowOffer(false)} title="Faire une offre">
+        <form onSubmit={handleOffer} className={styles.offerForm}>
+          <Input
+            type="number"
+            placeholder="Montant en FCFA"
+            value={offerAmount}
+            onChange={(e) => setOfferAmount(e.target.value)}
+            required
+          />
+          <Button type="submit" loading={busy} fullWidth>
+            Envoyer l'offre
+          </Button>
+        </form>
+      </BottomSheet>
     </div>
   );
 }
-
-const primaryBtn = {
-  flex: 1, padding: "12px 16px", borderRadius: 999, border: "none",
-  background: COLORS.coral, color: "#fff", fontWeight: 600, fontSize: 13.5, cursor: "pointer",
-};
-const secondaryBtn = {
-  flex: 1, padding: "12px 16px", borderRadius: 999, border: `2px solid ${COLORS.lagoon}`,
-  background: "transparent", color: COLORS.lagoon, fontWeight: 600, fontSize: 13.5, cursor: "pointer",
-};

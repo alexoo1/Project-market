@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { User, AtSign, Phone, MapPin, Lock } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
-import { COLORS } from "../theme";
 import { ApiError } from "../api/client";
-import { inputStyle, buttonStyle } from "./LoginPage";
+import Input from "../components/ui/Input";
+import Button from "../components/ui/Button";
+import styles from "./AuthPage.module.css";
 
 export default function RegisterPage() {
   const [form, setForm] = useState({
@@ -33,31 +35,34 @@ export default function RegisterPage() {
   };
 
   return (
-    <div style={{ padding: "40px 20px", maxWidth: 400, margin: "0 auto" }}>
-      <h1 style={{ color: COLORS.lagoon, fontSize: 24, fontWeight: 700 }}>Créer un compte</h1>
-      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 20 }}>
-        <input placeholder="Prénom" value={form.first_name} onChange={set("first_name")} required style={inputStyle} />
-        <input placeholder="Pseudo" value={form.display_name} onChange={set("display_name")} required style={inputStyle} />
-        <input placeholder="Téléphone (+225...)" value={form.phone} onChange={set("phone")} required style={inputStyle} />
-        <input placeholder="Email (facultatif)" value={form.email} onChange={set("email")} style={inputStyle} />
-        <input placeholder="Ville" value={form.city} onChange={set("city")} style={inputStyle} />
-        <input
-          placeholder="Mot de passe (8 caractères min.)"
-          type="password"
-          value={form.password}
-          onChange={set("password")}
-          required
-          minLength={8}
-          style={inputStyle}
-        />
-        {error && <p style={{ color: COLORS.danger, fontSize: 13 }}>{error}</p>}
-        <button type="submit" disabled={loading} style={buttonStyle}>
-          {loading ? "Création..." : "Créer mon compte"}
-        </button>
-      </form>
-      <p style={{ marginTop: 16, fontSize: 13, color: COLORS.inkSoft }}>
-        Déjà un compte ? <Link to="/login" style={{ color: COLORS.coral }}>Se connecter</Link>
-      </p>
+    <div className={styles.page}>
+      <div className={styles.card}>
+        <p className={styles.eyebrow}>Bienvenue</p>
+        <h1 className={styles.title}>Créer un compte</h1>
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <Input icon={User} placeholder="Prénom" value={form.first_name} onChange={set("first_name")} required />
+          <Input icon={User} placeholder="Pseudo" value={form.display_name} onChange={set("display_name")} required />
+          <Input icon={Phone} placeholder="Téléphone (+225...)" value={form.phone} onChange={set("phone")} required />
+          <Input icon={AtSign} placeholder="Email (facultatif)" value={form.email} onChange={set("email")} />
+          <Input icon={MapPin} placeholder="Ville" value={form.city} onChange={set("city")} />
+          <Input
+            icon={Lock}
+            placeholder="Mot de passe (8 caractères min.)"
+            type="password"
+            value={form.password}
+            onChange={set("password")}
+            required
+            minLength={8}
+          />
+          {error && <p className={styles.error}>{error}</p>}
+          <Button type="submit" loading={loading} fullWidth size="lg">
+            Créer mon compte
+          </Button>
+        </form>
+        <p className={styles.footer}>
+          Déjà un compte ? <Link to="/login" className={styles.link}>Se connecter</Link>
+        </p>
+      </div>
     </div>
   );
 }

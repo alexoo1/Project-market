@@ -1,0 +1,98 @@
+.page {
+  padding: var(--space-5) var(--space-4) 88px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.errorPage {
+  padding: var(--space-6) var(--space-4);
+  color: var(--color-danger);
+}
+
+.title {
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--color-lagoon);
+}
+
+.card {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  box-shadow: var(--shadow-sm);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2) 0;
+}
+
+.row + .row {
+  border-top: 1px solid var(--color-border);
+}
+
+.rowLabel {
+  font-size: var(--text-sm);
+  color: var(--color-ink-soft);
+}
+
+.rowValue {
+  font-size: var(--text-sm);
+  color: var(--color-ink);
+}
+
+.rowValueStrong {
+  font-weight: 700;
+  font-size: var(--text-md);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+
+.thanks {
+  text-align: center;
+  color: var(--color-success);
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+
+.reviewCard {
+  margin-top: var(--space-4);
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  box-shadow: var(--shadow-sm);
+}
+
+.reviewTitle {
+  margin: 0;
+  font-size: var(--text-md);
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+.textarea {
+  width: 100%;
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--color-border);
+  font-family: inherit;
+  font-size: var(--text-sm);
+  resize: vertical;
+  outline: none;
+}
+
+.textarea:focus-visible {
+  border-color: var(--color-lagoon);
+}

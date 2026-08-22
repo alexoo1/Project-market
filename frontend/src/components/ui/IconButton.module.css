@@ -1,0 +1,51 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard),
+    transform var(--duration-fast) var(--ease-standard);
+}
+
+.button:active {
+  transform: scale(0.92);
+}
+
+.md {
+  width: var(--tap-target-min);
+  height: var(--tap-target-min);
+}
+
+.sm {
+  width: 32px;
+  height: 32px;
+}
+
+.ghost {
+  background: transparent;
+  color: var(--color-ink);
+}
+.ghost:hover {
+  background: var(--color-sand-deep);
+}
+
+.solid {
+  background: var(--color-white);
+  color: var(--color-ink);
+  box-shadow: var(--shadow-sm);
+}
+.solid:hover {
+  background: var(--color-sand);
+}
+
+.filled {
+  background: var(--color-lagoon);
+  color: var(--color-sand);
+}
+.filled:hover {
+  background: var(--color-lagoon-soft);
+}

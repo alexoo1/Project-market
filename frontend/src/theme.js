@@ -1,14 +1,3 @@
-export const COLORS = {
-  lagoon: "#0E3B36",
-  lagoonSoft: "#164F48",
-  coral: "#EF5A3C",
-  sand: "#F6F1E7",
-  sandDeep: "#EDE4D3",
-  ink: "#161512",
-  inkSoft: "#6B655A",
-  danger: "#C0392B",
-};
-
 export function formatFCFA(n) {
   return new Intl.NumberFormat("fr-FR").format(n) + " FCFA";
 }

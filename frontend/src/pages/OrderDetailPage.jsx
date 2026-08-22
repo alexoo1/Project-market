@@ -1,14 +1,26 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getOrder, payOrder, shipOrder, confirmReceipt, cancelOrder, createReview } from "../api/endpoints";
-import { COLORS, formatFCFA, ORDER_STATUS_LABELS } from "../theme";
+import { formatFCFA, ORDER_STATUS_LABELS } from "../theme";
 import { useAuth } from "../context/AuthContext";
+import { useToast } from "../components/ui/ToastProvider";
 import { ApiError } from "../api/client";
+import Badge from "../components/ui/Badge";
+import Button from "../components/ui/Button";
+import RatingStars from "../components/ui/RatingStars";
+import Skeleton from "../components/ui/Skeleton";
+import styles from "./OrderDetailPage.module.css";
+
+const STATUS_TONE = {
+  completed: "success", cancelled: "danger", disputed: "danger", refunded: "neutral",
+  paid: "info", shipped: "info", pending_payment: "warning",
+};
 
 export default function OrderDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
+  const toast = useToast();
   const [order, setOrder] = useState(null);
   const [error, setError] = useState(null);
   const [busy, setBusy] = useState(false);
@@ -28,20 +40,26 @@ export default function OrderDetailPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, user, authLoading]);
 
-  if (error) return <div style={{ padding: 20, color: COLORS.danger }}>{error}</div>;
-  if (!order) return <div style={{ padding: 20, color: COLORS.inkSoft }}>Chargement...</div>;
+  if (error) return <div className={styles.errorPage}>{error}</div>;
+  if (!order) {
+    return (
+      <div className={styles.page}>
+        <Skeleton height={160} />
+      </div>
+    );
+  }
 
   const isBuyer = user?.id === order.buyer_id;
   const isSeller = user?.id === order.seller_id;
 
   const runAction = async (fn) => {
     setBusy(true);
-    setError(null);
     try {
       await fn();
       await load();
+      toast.success("Mise à jour effectuée.");
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Erreur");
+      toast.error(err instanceof ApiError ? err.message : "Erreur");
     } finally {
       setBusy(false);
     }
@@ -54,76 +72,72 @@ export default function OrderDetailPage() {
       await createReview(id, rating, comment || undefined);
       setReviewDone(true);
       setShowReview(false);
+      toast.success("Merci pour ton avis !");
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Erreur");
+      toast.error(err instanceof ApiError ? err.message : "Erreur");
     } finally {
       setBusy(false);
     }
   };
 
   return (
-    <div style={{ padding: "20px 16px 80px", maxWidth: 480, margin: "0 auto" }}>
-      <h1 style={{ fontSize: 18, fontWeight: 700, color: COLORS.lagoon }}>Commande</h1>
+    <div className={styles.page}>
+      <h1 className={styles.title}>Commande</h1>
 
-      <div style={{ background: "#fff", borderRadius: 16, padding: 16, marginTop: 12 }}>
-        <Row label="Statut" value={ORDER_STATUS_LABELS[order.status] || order.status} strong />
+      <div className={styles.card}>
+        <Row label="Statut" value={<Badge tone={STATUS_TONE[order.status] || "neutral"}>{ORDER_STATUS_LABELS[order.status] || order.status}</Badge>} />
         <Row label="Prix article" value={formatFCFA(order.item_price)} />
         <Row label="Frais plateforme" value={formatFCFA(order.platform_fee)} />
         <Row label="Livraison" value={formatFCFA(order.delivery_fee)} />
         <Row label="Total" value={formatFCFA(order.total)} strong />
-        {order.delivery?.tracking_number && (
-          <Row label="Suivi" value={order.delivery.tracking_number} />
-        )}
+        {order.delivery?.tracking_number && <Row label="Suivi" value={order.delivery.tracking_number} />}
       </div>
 
-      {error && <p style={{ color: COLORS.danger, fontSize: 13, marginTop: 12 }}>{error}</p>}
-
-      <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 16 }}>
+      <div className={styles.actions}>
         {isBuyer && order.status === "pending_payment" && (
           <>
-            <button onClick={() => runAction(() => payOrder(id))} disabled={busy} style={primaryBtn}>
+            <Button fullWidth onClick={() => runAction(() => payOrder(id))} loading={busy}>
               Payer maintenant (paiement mock)
-            </button>
-            <button onClick={() => runAction(() => cancelOrder(id))} disabled={busy} style={dangerBtn}>
+            </Button>
+            <Button fullWidth variant="danger" onClick={() => runAction(() => cancelOrder(id))} disabled={busy}>
               Annuler la commande
-            </button>
+            </Button>
           </>
         )}
 
         {isSeller && order.status === "paid" && (
-          <button onClick={() => runAction(() => shipOrder(id))} disabled={busy} style={primaryBtn}>
+          <Button fullWidth onClick={() => runAction(() => shipOrder(id))} loading={busy}>
             Marquer comme expédiée
-          </button>
+          </Button>
         )}
 
         {isBuyer && order.status === "shipped" && (
-          <button onClick={() => runAction(() => confirmReceipt(id))} disabled={busy} style={primaryBtn}>
+          <Button fullWidth onClick={() => runAction(() => confirmReceipt(id))} loading={busy}>
             Confirmer la réception
-          </button>
+          </Button>
         )}
 
         {order.status === "completed" && !reviewDone && !showReview && (
-          <button onClick={() => setShowReview(true)} style={primaryBtn}>
+          <Button fullWidth onClick={() => setShowReview(true)}>
             Laisser un avis
-          </button>
+          </Button>
         )}
-        {reviewDone && <p style={{ color: COLORS.lagoon, fontSize: 13 }}>Merci pour ton avis !</p>}
+        {reviewDone && <p className={styles.thanks}>Merci pour ton avis !</p>}
       </div>
 
       {showReview && (
-        <form onSubmit={handleReview} style={{ marginTop: 16, background: "#fff", borderRadius: 16, padding: 16 }}>
-          <p style={{ fontWeight: 600, fontSize: 14, margin: "0 0 8px" }}>Ton avis</p>
-          <select value={rating} onChange={(e) => setRating(Number(e.target.value))} style={{ width: "100%", padding: 10, borderRadius: 10, marginBottom: 8 }}>
-            {[5, 4, 3, 2, 1].map((r) => <option key={r} value={r}>{"⭐".repeat(r)}</option>)}
-          </select>
+        <form onSubmit={handleReview} className={styles.reviewCard}>
+          <p className={styles.reviewTitle}>Ton avis</p>
+          <RatingStars value={rating} interactive size={20} onChange={setRating} />
           <textarea
             placeholder="Commentaire (facultatif)"
+            aria-label="Commentaire (facultatif)"
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             rows={3}
-            style={{ width: "100%", padding: 10, borderRadius: 10, marginBottom: 8, resize: "vertical" }}
+            className={styles.textarea}
           />
-          <button type="submit" disabled={busy} style={primaryBtn}>Envoyer l'avis</button>
+          <Button type="submit" loading={busy} fullWidth>Envoyer l'avis</Button>
         </form>
       )}
     </div>
@@ -132,18 +146,9 @@ export default function OrderDetailPage() {
 
 function Row({ label, value, strong }) {
   return (
-    <div style={{ display: "flex", justifyContent: "space-between", padding: "6px 0" }}>
-      <span style={{ fontSize: 13, color: COLORS.inkSoft }}>{label}</span>
-      <span style={{ fontSize: 13, fontWeight: strong ? 700 : 400, color: COLORS.ink }}>{value}</span>
+    <div className={styles.row}>
+      <span className={styles.rowLabel}>{label}</span>
+      <span className={[styles.rowValue, strong ? styles.rowValueStrong : ""].filter(Boolean).join(" ")}>{value}</span>
     </div>
   );
 }
-
-const primaryBtn = {
-  padding: "12px 16px", borderRadius: 999, border: "none",
-  background: COLORS.coral, color: "#fff", fontWeight: 600, fontSize: 13.5, cursor: "pointer",
-};
-const dangerBtn = {
-  padding: "12px 16px", borderRadius: 999, border: `1px solid ${COLORS.danger}`,
-  background: "transparent", color: COLORS.danger, fontWeight: 600, fontSize: 13.5, cursor: "pointer",
-};

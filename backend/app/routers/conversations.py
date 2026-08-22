@@ -7,6 +7,8 @@ from app.core.deps import get_current_user
 from app.database.session import get_db
 from app.models.user import User
 from app.repositories.conversation_repository import MessageRepository
+from app.repositories.listing_repository import ListingRepository
+from app.repositories.user_repository import UserRepository
 from app.schemas.messaging import (
     ConversationWithLastMessage,
     MessagePublic,
@@ -14,13 +16,23 @@ from app.schemas.messaging import (
     StartConversationRequest,
 )
 from app.services.messaging_service import MessagingService
+from app.routers.listings import _to_card
 
 router = APIRouter(prefix="/conversations", tags=["messaging"])
 
 
-def _to_conversation_with_last(conversation, messages_repo: MessageRepository, user_id: uuid.UUID):
+def _to_conversation_with_last(
+    conversation,
+    messages_repo: MessageRepository,
+    users_repo: UserRepository,
+    listings_repo: ListingRepository,
+    user_id: uuid.UUID,
+):
     last = messages_repo.last_message(conversation.id)
     unread = messages_repo.unread_count(conversation.id, user_id)
+    other_id = conversation.seller_id if user_id == conversation.buyer_id else conversation.buyer_id
+    other_participant = users_repo.get_by_id(other_id)
+    listing = listings_repo.get_by_id(conversation.listing_id) if conversation.listing_id else None
     return ConversationWithLastMessage(
         id=conversation.id,
         buyer_id=conversation.buyer_id,
@@ -30,6 +42,8 @@ def _to_conversation_with_last(conversation, messages_repo: MessageRepository, u
         created_at=conversation.created_at,
         last_message=last,
         unread_count=unread,
+        other_participant=other_participant,
+        listing=_to_card(listing) if listing else None,
     )
 
 
@@ -40,15 +54,32 @@ def start_conversation(
     db: Session = Depends(get_db),
 ):
     service = MessagingService(db)
+    users_repo = UserRepository(db)
     conversation = service.start_or_get_conversation(current_user.id, payload.listing_id)
-    return _to_conversation_with_last(conversation, service.messages, current_user.id)
+    return _to_conversation_with_last(conversation, service.messages, users_repo, service.listings, current_user.id)
 
 
 @router.get("", response_model=list[ConversationWithLastMessage])
 def list_conversations(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     service = MessagingService(db)
+    users_repo = UserRepository(db)
     conversations = service.list_conversations(current_user.id)
-    return [_to_conversation_with_last(c, service.messages, current_user.id) for c in conversations]
+    return [
+        _to_conversation_with_last(c, service.messages, users_repo, service.listings, current_user.id)
+        for c in conversations
+    ]
+
+
+@router.get("/{conversation_id}", response_model=ConversationWithLastMessage)
+def get_conversation(
+    conversation_id: uuid.UUID,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    service = MessagingService(db)
+    users_repo = UserRepository(db)
+    conversation = service.get_conversation(conversation_id, current_user.id)
+    return _to_conversation_with_last(conversation, service.messages, users_repo, service.listings, current_user.id)
 
 
 @router.get("/{conversation_id}/messages", response_model=list[MessagePublic])

@@ -3,6 +3,9 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from app.schemas.listing import ListingCardPublic
+from app.schemas.user import UserPublic
+
 
 class StartConversationRequest(BaseModel):
     listing_id: uuid.UUID
@@ -37,3 +40,5 @@ class ConversationPublic(BaseModel):
 class ConversationWithLastMessage(ConversationPublic):
     last_message: MessagePublic | None
     unread_count: int
+    other_participant: UserPublic
+    listing: ListingCardPublic | None

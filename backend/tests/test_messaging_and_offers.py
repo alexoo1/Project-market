@@ -56,6 +56,47 @@ def test_start_conversation_is_idempotent(client, category):
     assert r1.json()["id"] == r2.json()["id"]
 
 
+def test_conversation_includes_other_participant_and_listing(client, category):
+    seller_token = _register(client, "+2250722222220", "seller_enrich")
+    buyer_token = _register(client, "+2250722222221", "buyer_enrich")
+    listing_id = _create_listing(client, seller_token, category.id)
+
+    conv = client.post(
+        "/api/v1/conversations", json={"listing_id": listing_id},
+        headers={"Authorization": f"Bearer {buyer_token}"},
+    ).json()
+
+    # Vu par l'acheteur: l'autre participant doit être le vendeur.
+    assert conv["other_participant"]["display_name"] == "seller_enrich"
+    assert conv["listing"]["id"] == listing_id
+    assert conv["listing"]["title"] == "Robe wax imprimee"
+
+    # Vu par le vendeur: l'autre participant doit être l'acheteur.
+    seller_view = client.get(
+        "/api/v1/conversations", headers={"Authorization": f"Bearer {seller_token}"}
+    ).json()
+    assert seller_view[0]["other_participant"]["display_name"] == "buyer_enrich"
+
+
+def test_get_single_conversation_requires_participation(client, category):
+    seller_token = _register(client, "+2250722222222", "seller_single")
+    buyer_token = _register(client, "+2250722222223", "buyer_single")
+    third_token = _register(client, "+2250722222224", "third_single")
+    listing_id = _create_listing(client, seller_token, category.id)
+
+    conv = client.post(
+        "/api/v1/conversations", json={"listing_id": listing_id},
+        headers={"Authorization": f"Bearer {buyer_token}"},
+    ).json()
+
+    ok = client.get(f"/api/v1/conversations/{conv['id']}", headers={"Authorization": f"Bearer {buyer_token}"})
+    assert ok.status_code == 200
+    assert ok.json()["other_participant"]["display_name"] == "seller_single"
+
+    forbidden = client.get(f"/api/v1/conversations/{conv['id']}", headers={"Authorization": f"Bearer {third_token}"})
+    assert forbidden.status_code == 403
+
+
 def test_only_participants_can_read_messages(client, category):
     seller_token = _register(client, "+2250722222203", "seller_msg2")
     buyer_token = _register(client, "+2250722222204", "buyer_msg2")

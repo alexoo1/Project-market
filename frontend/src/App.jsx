@@ -10,14 +10,16 @@ import OrderDetailPage from "./pages/OrderDetailPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import BottomNav from "./components/BottomNav";
-import { COLORS } from "./theme";
+import Navbar from "./components/ui/Navbar";
+import styles from "./App.module.css";
 
 export default function App() {
   const location = useLocation();
   const hideNav = location.pathname.startsWith("/messages/") || location.pathname === "/login" || location.pathname === "/register";
 
   return (
-    <div style={{ minHeight: "100vh", background: COLORS.sand, fontFamily: "'Inter', sans-serif", color: COLORS.ink }}>
+    <div className={styles.app}>
+      {!hideNav && <Navbar />}
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/search" element={<SearchPage />} />

@@ -144,6 +144,7 @@ par 8 tests automatisés, tous validés.
 ### Annonces
 | Méthode | Endpoint | Description | Auth |
 |---------|----------|-------------|------|
+| POST | `/api/v1/uploads/images` | Téléverser une ou plusieurs photos (multipart), retourne leurs URLs publiques | Oui |
 | GET | `/api/v1/categories` | Liste des catégories | Non |
 | GET | `/api/v1/brands` | Liste des marques | Non |
 | POST | `/api/v1/listings` | Créer une annonce | Oui |

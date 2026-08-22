@@ -1,0 +1,82 @@
+.header {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .header {
+    display: block;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--color-white);
+    border-bottom: 1px solid var(--color-border);
+  }
+}
+
+.inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: var(--space-3) var(--space-6);
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.logo {
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--color-lagoon);
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.links {
+  display: flex;
+  gap: var(--space-6);
+  flex: 1;
+}
+
+.link {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-ink-soft);
+  text-decoration: none;
+  padding: var(--space-2) 0;
+  border-bottom: 2px solid transparent;
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+
+.link:hover {
+  color: var(--color-ink);
+}
+
+.active {
+  color: var(--color-lagoon);
+  border-bottom-color: var(--color-coral);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-shrink: 0;
+}
+
+.iconLink {
+  color: var(--color-ink-soft);
+  display: flex;
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+
+.iconLink:hover {
+  color: var(--color-ink);
+}
+
+.sellButton {
+  white-space: nowrap;
+}
+
+.avatarLink {
+  display: flex;
+}

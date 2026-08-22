@@ -19,6 +19,7 @@ venv/
 # IDE
 .vscode/
 .idea/
+.claude/
 
 # Docker volumes / data
 media/
