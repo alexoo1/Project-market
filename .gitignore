@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# Env
+.env
+!.env.example
+
+# Alembic
+# (les migrations versionnées restent trackées, seuls les caches sont ignorés)
+
+# OS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Docker volumes / data
+media/
