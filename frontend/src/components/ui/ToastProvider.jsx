@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useMemo, useRef, useState } from "react";
-import { AnimatePresence, m } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { CheckCircle2, XCircle, Info, X } from "lucide-react";
 import styles from "./Toast.module.css";
 
@@ -45,7 +45,7 @@ export function ToastProvider({ children }) {
           {toasts.map((t) => {
             const Icon = ICONS[t.tone];
             return (
-              <m.div
+              <motion.div
                 key={t.id}
                 layout
                 initial={{ opacity: 0, y: 12, scale: 0.96 }}
@@ -64,7 +64,7 @@ export function ToastProvider({ children }) {
                 >
                   <X size={14} strokeWidth={2} />
                 </button>
-              </m.div>
+              </motion.div>
             );
           })}
         </AnimatePresence>

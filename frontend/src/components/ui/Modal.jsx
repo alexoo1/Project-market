@@ -1,4 +1,4 @@
-import { AnimatePresence, m } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { X } from "lucide-react";
 import { useEffect } from "react";
 import IconButton from "./IconButton";
@@ -16,7 +16,7 @@ export default function Modal({ open, onClose, title, children }) {
     <AnimatePresence>
       {open && (
         <div className={styles.overlay}>
-          <m.div
+          <motion.div
             className={styles.backdrop}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -24,7 +24,7 @@ export default function Modal({ open, onClose, title, children }) {
             transition={{ duration: 0.18 }}
             onClick={onClose}
           />
-          <m.div
+          <motion.div
             role="dialog"
             aria-modal="true"
             aria-label={title}
@@ -39,7 +39,7 @@ export default function Modal({ open, onClose, title, children }) {
               <IconButton icon={X} label="Fermer" size="sm" onClick={onClose} className={styles.close} />
             </div>
             <div className={styles.body}>{children}</div>
-          </m.div>
+          </motion.div>
         </div>
       )}
     </AnimatePresence>

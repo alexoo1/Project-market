@@ -1,4 +1,4 @@
-import { AnimatePresence, m } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import styles from "./BottomSheet.module.css";
 
 export default function BottomSheet({ open, onClose, title, children }) {
@@ -6,7 +6,7 @@ export default function BottomSheet({ open, onClose, title, children }) {
     <AnimatePresence>
       {open && (
         <div className={styles.overlay}>
-          <m.div
+          <motion.div
             className={styles.backdrop}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -14,7 +14,7 @@ export default function BottomSheet({ open, onClose, title, children }) {
             transition={{ duration: 0.18 }}
             onClick={onClose}
           />
-          <m.div
+          <motion.div
             role="dialog"
             aria-modal="true"
             aria-label={title}
@@ -33,7 +33,7 @@ export default function BottomSheet({ open, onClose, title, children }) {
             <div className={styles.handle} />
             {title && <p className={styles.title}>{title}</p>}
             <div className={styles.body}>{children}</div>
-          </m.div>
+          </motion.div>
         </div>
       )}
     </AnimatePresence>
