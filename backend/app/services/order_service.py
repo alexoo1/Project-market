@@ -13,6 +13,7 @@ from app.schemas.order import PurchaseRequest
 from app.services.delivery.mock_provider import get_delivery_provider
 from app.services.notification_service import NotificationService
 from app.services.payment.mock_provider import get_payment_provider
+from app.services.wallet_service import WalletService
 
 
 class OrderService:
@@ -24,6 +25,7 @@ class OrderService:
         self.payment_provider = get_payment_provider()
         self.delivery_provider = get_delivery_provider()
         self.notifications = NotificationService(db)
+        self.wallet = WalletService(db)
 
     def _build_order(
         self,
@@ -175,8 +177,11 @@ class OrderService:
         if order.status != OrderStatus.SHIPPED:
             raise ValidationError("Cette commande n'est pas encore expédiée.")
 
-        # Débloque les fonds vers le vendeur (paiement séquestre logique, spec section 12)
+        # Débloque les fonds vers le vendeur (paiement séquestre logique, spec section 12):
+        # simule l'appel au provider de paiement, puis crédite le portefeuille vendeur
+        # (seul solde réellement suivi côté plateforme tant que payout_seller est mocké).
         self.payment_provider.payout_seller(str(order.id), str(order.seller_id), int(order.item_price))
+        self.wallet.credit_from_sale(order)
 
         order.status = OrderStatus.COMPLETED
         self.orders.save(order)

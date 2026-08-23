@@ -9,7 +9,7 @@ from app.core.config import settings
 from app.core.exceptions import AppError
 from app.routers import (
     auth, boosts, conversations, favorites, follows, listings, notifications,
-    offers, orders, reviews, taxonomy, uploads,
+    offers, orders, reviews, taxonomy, uploads, wallet,
 )
 
 app = FastAPI(
@@ -55,6 +55,7 @@ app.include_router(follows.router, prefix=settings.API_V1_PREFIX)
 app.include_router(boosts.router, prefix=settings.API_V1_PREFIX)
 app.include_router(notifications.router, prefix=settings.API_V1_PREFIX)
 app.include_router(uploads.router, prefix=settings.API_V1_PREFIX)
+app.include_router(wallet.router, prefix=settings.API_V1_PREFIX)
 
 # Les prochains routers (listings, search, offers, orders, ...) seront
 # ajoutés au fil des phases suivantes, en suivant le même pattern.

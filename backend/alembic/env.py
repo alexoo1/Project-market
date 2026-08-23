@@ -21,6 +21,7 @@ from app.models.review import Review  # noqa: F401
 from app.models.follow import Follow  # noqa: F401
 from app.models.boost import ListingBoost  # noqa: F401
 from app.models.notification import Notification  # noqa: F401
+from app.models.wallet import Wallet, WalletTransaction  # noqa: F401
 
 config = context.config
 config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)

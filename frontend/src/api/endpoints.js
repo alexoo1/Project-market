@@ -150,6 +150,14 @@ export function getFollowStatus(userId) {
   return api.get(`/users/${userId}/follow-status`);
 }
 
+// --- Wallet ---
+export function getWallet() {
+  return api.get("/wallet");
+}
+export function requestWithdrawal(payload) {
+  return api.post("/wallet/withdrawals", payload);
+}
+
 // --- Notifications ---
 export function getNotifications() {
   return api.get("/notifications");

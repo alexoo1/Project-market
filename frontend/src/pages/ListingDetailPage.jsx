@@ -17,6 +17,7 @@ import UserAvatar from "../components/ui/UserAvatar";
 import RatingStars from "../components/ui/RatingStars";
 import Select from "../components/ui/Select";
 import Input from "../components/ui/Input";
+import PaymentMethodPicker from "../components/ui/PaymentMethodPicker";
 import BottomSheet from "../components/ui/BottomSheet";
 import Skeleton from "../components/ui/Skeleton";
 import styles from "./ListingDetailPage.module.css";
@@ -33,7 +34,9 @@ export default function ListingDetailPage() {
   const [error, setError] = useState(null);
   const [showOffer, setShowOffer] = useState(false);
   const [offerAmount, setOfferAmount] = useState("");
+  const [showBuy, setShowBuy] = useState(false);
   const [deliveryMethod, setDeliveryMethod] = useState("hand_delivery");
+  const [paymentMethod, setPaymentMethod] = useState("card");
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
@@ -59,16 +62,20 @@ export default function ListingDetailPage() {
   };
 
   const handleBuy = async () => {
-    if (!user) return navigate("/login");
     setBusy(true);
     try {
-      const order = await purchaseListing(id, { delivery_method: deliveryMethod, payment_method: "mock" });
+      const order = await purchaseListing(id, { delivery_method: deliveryMethod, payment_method: paymentMethod });
       navigate(`/orders/${order.id}`);
     } catch (err) {
       toast.error(err instanceof ApiError ? err.message : "Erreur");
     } finally {
       setBusy(false);
     }
+  };
+
+  const openBuySheet = () => {
+    if (!user) return navigate("/login");
+    setShowBuy(true);
   };
 
   const handleMessage = async () => {
@@ -149,16 +156,6 @@ export default function ListingDetailPage() {
         )}
 
         {isOwner && <p className={styles.ownerNote}>C'est ton annonce.</p>}
-
-        {!isOwner && listing.status === "active" && (
-          <div className={styles.deliveryField}>
-            <Select label="Mode de livraison" value={deliveryMethod} onChange={(e) => setDeliveryMethod(e.target.value)}>
-              {Object.entries(DELIVERY_METHOD_LABELS).map(([val, label]) => (
-                <option key={val} value={val}>{label}</option>
-              ))}
-            </Select>
-          </div>
-        )}
       </div>
 
       {!isOwner && listing.status === "active" && (
@@ -167,7 +164,7 @@ export default function ListingDetailPage() {
           <Button variant="secondary" onClick={() => setShowOffer(true)} className={styles.offerButton}>
             <Tag size={15} strokeWidth={2} /> Faire une offre
           </Button>
-          <Button variant="primary" onClick={handleBuy} loading={busy} className={styles.buyButton}>
+          <Button variant="primary" onClick={openBuySheet} className={styles.buyButton}>
             Acheter
           </Button>
         </div>
@@ -186,6 +183,24 @@ export default function ListingDetailPage() {
             Envoyer l'offre
           </Button>
         </form>
+      </BottomSheet>
+
+      <BottomSheet open={showBuy} onClose={() => setShowBuy(false)} title="Finaliser l'achat">
+        <div className={styles.buySheet}>
+          <Select label="Mode de livraison" value={deliveryMethod} onChange={(e) => setDeliveryMethod(e.target.value)}>
+            {Object.entries(DELIVERY_METHOD_LABELS).map(([val, label]) => (
+              <option key={val} value={val}>{label}</option>
+            ))}
+          </Select>
+          <PaymentMethodPicker value={paymentMethod} onChange={setPaymentMethod} />
+          <div className={styles.buyTotalRow}>
+            <span>Total</span>
+            <strong>{formatFCFA(listing.price)}</strong>
+          </div>
+          <Button onClick={handleBuy} loading={busy} fullWidth size="lg">
+            Confirmer l'achat
+          </Button>
+        </div>
       </BottomSheet>
     </div>
   );

@@ -135,3 +135,72 @@
   border-radius: var(--radius-lg);
   background: var(--color-sand-deep);
 }
+
+.walletCard {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.walletLabel {
+  margin: 0;
+  font-size: var(--text-xs);
+  color: var(--color-ink-soft);
+}
+
+.walletBalance {
+  margin: 0;
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  color: var(--color-ink);
+  letter-spacing: -0.01em;
+}
+
+.walletHint {
+  margin: 0;
+  font-size: var(--text-xs);
+  color: var(--color-ink-soft);
+  text-align: center;
+}
+
+.transactionRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+}
+
+.creditIcon {
+  background: var(--color-success-bg);
+  color: var(--color-success);
+}
+
+.transactionMeta {
+  margin: 2px 0 0;
+  font-size: var(--text-xs);
+  color: var(--color-ink-soft);
+}
+
+.transactionAmount {
+  margin: 0;
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+.creditText {
+  color: var(--color-success);
+}
+
+.withdrawForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}

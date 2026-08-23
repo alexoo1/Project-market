@@ -72,6 +72,17 @@ class DeliveryStatus(str, Enum):
     DELIVERED = "delivered"
 
 
+class WalletTransactionType(str, Enum):
+    SALE_CREDIT = "sale_credit"
+    WITHDRAWAL = "withdrawal"
+
+
+class WalletTransactionStatus(str, Enum):
+    PENDING = "pending"
+    COMPLETED = "completed"
+    FAILED = "failed"
+
+
 class NotificationType(str, Enum):
     NEW_OFFER = "new_offer"
     OFFER_ACCEPTED = "offer_accepted"
