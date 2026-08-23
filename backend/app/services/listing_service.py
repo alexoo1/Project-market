@@ -73,8 +73,14 @@ class ListingService:
             )
 
         update_fields = data.model_dump(exclude_unset=True)
+        new_images = update_fields.pop("images", None)
         for field, value in update_fields.items():
             setattr(listing, field, value)
+
+        if new_images is not None:
+            listing.images = [
+                ListingImage(url=img["url"], position=img["position"]) for img in new_images
+            ]
 
         listing = self.listings.save(listing)
         self.db.commit()

@@ -115,6 +115,61 @@ def test_only_owner_can_update_listing(client, category):
     assert allowed.json()["price"] == 12000
 
 
+def test_update_listing_can_replace_images(client, category):
+    token = _register(client, "+2250711111111", "seller_img_edit")
+    create_resp = client.post(
+        "/api/v1/listings", json=_listing_payload(category.id),
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    listing_id = create_resp.json()["id"]
+
+    update = client.patch(
+        f"/api/v1/listings/{listing_id}",
+        json={"images": [{"url": "https://example.com/new1.jpg"}, {"url": "https://example.com/new2.jpg"}]},
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    assert update.status_code == 200
+    images = update.json()["images"]
+    assert len(images) == 2
+    assert images[0]["url"] == "https://example.com/new1.jpg"
+    assert images[0]["position"] == 0
+    assert images[1]["position"] == 1
+
+
+def test_search_filters_by_seller_id(client, category):
+    seller_a = _register(client, "+2250711111108", "seller_a")
+    seller_b = _register(client, "+2250711111109", "seller_b")
+    client.post(
+        "/api/v1/listings", json=_listing_payload(category.id, title="Article vendeur A"),
+        headers={"Authorization": f"Bearer {seller_a}"},
+    )
+    client.post(
+        "/api/v1/listings", json=_listing_payload(category.id, title="Article vendeur B"),
+        headers={"Authorization": f"Bearer {seller_b}"},
+    )
+    seller_a_id = client.get("/api/v1/auth/me", headers={"Authorization": f"Bearer {seller_a}"}).json()["id"]
+
+    resp = client.get(f"/api/v1/listings?seller_id={seller_a_id}")
+    assert resp.status_code == 200
+    items = resp.json()["items"]
+    assert len(items) == 1
+    assert items[0]["title"] == "Article vendeur A"
+
+
+def test_get_public_user_profile(client):
+    token = _register(client, "+2250711111110", "public_profile_user")
+    me = client.get("/api/v1/auth/me", headers={"Authorization": f"Bearer {token}"}).json()
+
+    resp = client.get(f"/api/v1/users/{me['id']}")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["display_name"] == "public_profile_user"
+    assert "phone" not in body  # UserPublic ne doit jamais exposer le téléphone
+
+    missing = client.get("/api/v1/users/00000000-0000-0000-0000-000000000000")
+    assert missing.status_code == 404
+
+
 def test_favorite_flow_is_idempotent(client, category):
     seller_token = _register(client, "+2250711111106", "seller5")
     buyer_token = _register(client, "+2250711111107", "buyer5")

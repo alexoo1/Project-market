@@ -71,6 +71,18 @@
   border-top: 1px solid var(--color-border);
   border-bottom: 1px solid var(--color-border);
   margin-bottom: var(--space-4);
+  text-decoration: none;
+  color: inherit;
+}
+
+.ownerActions {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.ownerActions > * {
+  flex: 1;
 }
 
 .sellerName {
@@ -89,11 +101,6 @@
   color: var(--color-ink-soft);
 }
 
-.ownerNote {
-  font-size: var(--text-sm);
-  color: var(--color-ink-soft);
-  font-style: italic;
-}
 
 .errorText {
   padding: var(--space-4);

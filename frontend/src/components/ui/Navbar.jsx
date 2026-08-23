@@ -3,6 +3,7 @@ import { Search, MessageCircle, Plus } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import UserAvatar from "./UserAvatar";
 import Button from "./Button";
+import NotificationBell from "./NotificationBell";
 import styles from "./Navbar.module.css";
 
 const links = [
@@ -40,6 +41,7 @@ export default function Navbar() {
           <Link to="/messages" className={styles.iconLink} aria-label="Messages">
             <MessageCircle size={19} strokeWidth={2} />
           </Link>
+          <NotificationBell className={styles.iconLink} />
           <Link to="/sell">
             <Button variant="primary" size="md" className={styles.sellButton}>
               <Plus size={16} strokeWidth={2.5} />

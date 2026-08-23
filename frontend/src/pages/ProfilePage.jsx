@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { LogOut, MapPin, Calendar, ShoppingBag, Heart, Tag, Package, Wallet as WalletIcon, ArrowDownCircle, ArrowUpCircle } from "lucide-react";
-import { getMyPurchases, getMySales, getFavorites, getMyListings, getWallet, requestWithdrawal } from "../api/endpoints";
-import { formatFCFA, ORDER_STATUS_LABELS, WALLET_TRANSACTION_LABELS } from "../theme";
+import { LogOut, MapPin, Calendar, ShoppingBag, Heart, Tag, Package, Wallet as WalletIcon, ArrowDownCircle, ArrowUpCircle, HandCoins, Pencil } from "lucide-react";
+import {
+  getMyPurchases, getMySales, getFavorites, getMyListings, getWallet, requestWithdrawal,
+  getMyOffers, acceptOffer, rejectOffer, counterOffer,
+} from "../api/endpoints";
+import { formatFCFA, ORDER_STATUS_LABELS, WALLET_TRANSACTION_LABELS, OFFER_STATUS_LABELS } from "../theme";
 import { useAuth } from "../context/AuthContext";
 import { useToast } from "../components/ui/ToastProvider";
 import { ApiError } from "../api/client";
@@ -22,6 +25,7 @@ import styles from "./ProfilePage.module.css";
 const TABS = [
   { key: "purchases", label: "Achats" },
   { key: "sales", label: "Ventes" },
+  { key: "offers", label: "Offres" },
   { key: "favorites", label: "Favoris" },
   { key: "listings", label: "Mes annonces" },
   { key: "wallet", label: "Portefeuille" },
@@ -29,6 +33,11 @@ const TABS = [
 
 const ORDER_STATUS_TONE = {
   completed: "success", cancelled: "danger", disputed: "danger", refunded: "neutral",
+};
+
+const OFFER_STATUS_TONE = {
+  pending: "warning", accepted: "success", rejected: "danger", countered: "info",
+  expired: "neutral", purchased: "success",
 };
 
 export default function ProfilePage() {
@@ -40,8 +49,10 @@ export default function ProfilePage() {
   const [favorites, setFavorites] = useState(null);
   const [myListings, setMyListings] = useState(null);
   const [wallet, setWallet] = useState(null);
+  const [offers, setOffers] = useState(null);
 
   const loadWallet = () => getWallet().then(setWallet).catch(() => setWallet({ balance: 0, transactions: [] }));
+  const loadOffers = () => getMyOffers().then(setOffers).catch(() => setOffers([]));
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -54,6 +65,7 @@ export default function ProfilePage() {
       getFavorites().then(setFavorites).catch(() => setFavorites([]));
       getMyListings().then(setMyListings).catch(() => setMyListings([]));
       loadWallet();
+      loadOffers();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, authLoading, navigate]);
@@ -77,6 +89,11 @@ export default function ProfilePage() {
             <Calendar size={13} strokeWidth={2} /> Membre depuis {new Date(user.created_at).getFullYear()}
           </span>
         </div>
+        <div className={styles.headerActions}>
+          <Button variant="secondary" onClick={() => navigate("/profile/edit")}>
+            <Pencil size={14} strokeWidth={2} /> Modifier le profil
+          </Button>
+        </div>
         <button onClick={logout} className={styles.logout}>
           <LogOut size={14} strokeWidth={2} /> Se déconnecter
         </button>
@@ -93,6 +110,7 @@ export default function ProfilePage() {
       <div className={styles.tabContent}>
         {tab === "purchases" && <OrderList orders={purchases} role="buyer" />}
         {tab === "sales" && <OrderList orders={sales} role="seller" />}
+        {tab === "offers" && <OffersTab offers={offers} userId={user.id} onChanged={loadOffers} />}
         {tab === "favorites" && <ListingGrid items={favorites} allFavorited emptyIcon={Heart} emptyTitle="Aucun favori" emptyDescription="Les annonces que tu aimes apparaîtront ici." />}
         {tab === "listings" && <ListingGrid items={myListings} emptyIcon={Tag} emptyTitle="Aucune annonce" emptyDescription="Publie ton premier article pour le voir ici." />}
         {tab === "wallet" && <WalletTab wallet={wallet} onChanged={loadWallet} />}
@@ -200,6 +218,96 @@ function WalletTab({ wallet, onChanged }) {
           <p className={styles.walletHint}>Solde disponible : {formatFCFA(wallet.balance)}</p>
           <Button type="submit" loading={busy} fullWidth>
             Confirmer le retrait
+          </Button>
+        </form>
+      </BottomSheet>
+    </>
+  );
+}
+
+function OffersTab({ offers, userId, onChanged }) {
+  const toast = useToast();
+  const [busyId, setBusyId] = useState(null);
+  const [counterFor, setCounterFor] = useState(null);
+  const [counterAmount, setCounterAmount] = useState("");
+
+  if (offers === null) {
+    return (
+      <div className={styles.orderList}>
+        {Array.from({ length: 3 }).map((_, i) => <div key={i} className={styles.orderSkeleton} />)}
+      </div>
+    );
+  }
+  if (offers.length === 0) {
+    return <EmptyState icon={HandCoins} title="Aucune offre" description="Les offres que tu envoies ou reçois apparaîtront ici." />;
+  }
+
+  const run = async (offerId, fn) => {
+    setBusyId(offerId);
+    try {
+      await fn();
+      onChanged();
+      toast.success("Offre mise à jour.");
+    } catch (err) {
+      toast.error(err instanceof ApiError ? err.message : "Erreur");
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const submitCounter = async (e) => {
+    e.preventDefault();
+    await run(counterFor, () => counterOffer(counterFor, Number(counterAmount)));
+    setCounterFor(null);
+    setCounterAmount("");
+  };
+
+  return (
+    <>
+      <div className={styles.orderList}>
+        {offers.map((o) => {
+          const isSeller = o.seller_id === userId;
+          const canRespond = o.status === "pending" && (
+            (o.proposed_by === "buyer" && isSeller) || (o.proposed_by === "seller" && !isSeller)
+          );
+          return (
+            <div key={o.id} className={styles.offerRow}>
+              <div className={styles.orderInfo}>
+                <div>
+                  <p className={styles.orderPrice}>{o.listing?.title || "Annonce"}</p>
+                  <p className={styles.transactionMeta}>{formatFCFA(o.amount)} · {isSeller ? "Reçue" : "Envoyée"}</p>
+                </div>
+                <Badge tone={OFFER_STATUS_TONE[o.status] || "neutral"}>{OFFER_STATUS_LABELS[o.status] || o.status}</Badge>
+              </div>
+              {canRespond && (
+                <div className={styles.offerActions}>
+                  <Button size="md" variant="danger" disabled={busyId === o.id} onClick={() => run(o.id, () => rejectOffer(o.id))}>
+                    Refuser
+                  </Button>
+                  <Button size="md" variant="secondary" disabled={busyId === o.id} onClick={() => setCounterFor(o.id)}>
+                    Contre-offre
+                  </Button>
+                  <Button size="md" loading={busyId === o.id} onClick={() => run(o.id, () => acceptOffer(o.id))}>
+                    Accepter
+                  </Button>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      <BottomSheet open={!!counterFor} onClose={() => setCounterFor(null)} title="Faire une contre-offre">
+        <form onSubmit={submitCounter} className={styles.withdrawForm}>
+          <Input
+            type="number"
+            placeholder="Montant en FCFA"
+            value={counterAmount}
+            onChange={(e) => setCounterAmount(e.target.value)}
+            required
+          />
+          <Button type="submit" loading={busyId === counterFor} fullWidth>
+            Envoyer la contre-offre
           </Button>
         </form>
       </BottomSheet>

@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class UserPublic(BaseModel):
@@ -26,3 +26,16 @@ class UserMe(UserPublic):
     district: str | None
     is_verified: bool
     updated_at: datetime
+
+
+class UserUpdateRequest(BaseModel):
+    display_name: str | None = Field(default=None, min_length=2, max_length=100)
+    bio: str | None = Field(default=None, max_length=500)
+    city: str | None = Field(default=None, max_length=100)
+    district: str | None = Field(default=None, max_length=100)
+    profile_photo_url: str | None = None
+
+
+class ChangePasswordRequest(BaseModel):
+    current_password: str
+    new_password: str = Field(min_length=8)

@@ -42,6 +42,8 @@ class ListingRepository:
             stmt = stmt.where(Listing.category_id == params.category_id)
         if params.brand_id:
             stmt = stmt.where(Listing.brand_id == params.brand_id)
+        if params.seller_id:
+            stmt = stmt.where(Listing.seller_id == params.seller_id)
         if params.size:
             stmt = stmt.where(Listing.size == params.size)
         if params.condition:

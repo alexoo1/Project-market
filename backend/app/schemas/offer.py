@@ -4,6 +4,7 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.models.enums import OfferProposedBy, OfferStatus
+from app.schemas.listing import ListingCardPublic
 
 
 class CreateOfferRequest(BaseModel):
@@ -26,3 +27,4 @@ class OfferPublic(BaseModel):
     status: OfferStatus
     proposed_by: OfferProposedBy
     created_at: datetime
+    listing: ListingCardPublic | None = None

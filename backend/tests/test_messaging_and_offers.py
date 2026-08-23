@@ -159,6 +159,26 @@ def test_cannot_offer_on_own_listing(client, category):
     assert resp.status_code == 422
 
 
+def test_offer_includes_listing_card(client, category):
+    seller_token = _register(client, "+2250722222230", "seller_off_card")
+    buyer_token = _register(client, "+2250722222231", "buyer_off_card")
+    listing_id = _create_listing(client, seller_token, category.id)
+
+    resp = client.post(
+        f"/api/v1/listings/{listing_id}/offers", json={"amount": 9000},
+        headers={"Authorization": f"Bearer {buyer_token}"},
+    )
+    assert resp.status_code == 201
+    offer = resp.json()
+    assert offer["listing"] is not None
+    assert offer["listing"]["id"] == listing_id
+    assert offer["listing"]["title"] == "Robe wax imprimee"
+
+    mine = client.get("/api/v1/offers/mine", headers={"Authorization": f"Bearer {buyer_token}"})
+    assert mine.status_code == 200
+    assert mine.json()[0]["listing"]["id"] == listing_id
+
+
 def test_duplicate_active_offer_is_rejected(client, category):
     seller_token = _register(client, "+2250722222209", "seller_off2")
     buyer_token = _register(client, "+2250722222210", "buyer_off2")

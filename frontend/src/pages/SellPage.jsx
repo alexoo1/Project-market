@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, ArrowRight, ImagePlus, X, Check } from "lucide-react";
-import { getCategories, getBrands, createListing, uploadImages } from "../api/endpoints";
+import { getCategories, getBrands, createListing, updateListing, getListing, uploadImages } from "../api/endpoints";
 import { formatFCFA, CONDITION_LABELS } from "../theme";
 import { useAuth } from "../context/AuthContext";
 import { useToast } from "../components/ui/ToastProvider";
@@ -10,6 +10,7 @@ import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
 import IconButton from "../components/ui/IconButton";
 import Chip from "../components/ui/Chip";
+import Skeleton from "../components/ui/Skeleton";
 import styles from "./SellPage.module.css";
 
 const STEPS = ["Photos", "Titre", "Catégorie", "Détails", "Description", "Prix & lieu", "Aperçu"];
@@ -20,6 +21,8 @@ const emptyForm = {
 };
 
 export default function SellPage() {
+  const { id } = useParams();
+  const isEditMode = Boolean(id);
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const toast = useToast();
@@ -29,6 +32,7 @@ export default function SellPage() {
   const [uploading, setUploading] = useState(false);
   const [busy, setBusy] = useState(false);
   const [step, setStep] = useState(0);
+  const [loadingListing, setLoadingListing] = useState(isEditMode);
   const fileInputRef = useRef(null);
   const [form, setForm] = useState(emptyForm);
 
@@ -36,6 +40,37 @@ export default function SellPage() {
     getCategories().then(setCategories).catch(() => {});
     getBrands().then(setBrands).catch(() => {});
   }, []);
+
+  useEffect(() => {
+    if (!isEditMode) return;
+    getListing(id)
+      .then((listing) => {
+        if (user && listing.seller?.id !== user.id) {
+          toast.error("Tu ne peux modifier que tes propres annonces.");
+          navigate(`/listings/${id}`);
+          return;
+        }
+        setForm({
+          title: listing.title,
+          description: listing.description,
+          category_id: listing.category_id || "",
+          brand_id: listing.brand_id || "",
+          size: listing.size || "",
+          color: listing.color || "",
+          condition: listing.condition,
+          price: String(listing.price),
+          city: listing.city,
+          district: listing.district || "",
+        });
+        setImages(listing.images.map((img) => img.url));
+      })
+      .catch(() => {
+        toast.error("Annonce introuvable.");
+        navigate("/profile");
+      })
+      .finally(() => setLoadingListing(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, isEditMode, user]);
 
   if (!authLoading && !user) {
     navigate("/login");
@@ -87,15 +122,34 @@ export default function SellPage() {
         district: form.district || undefined,
         images: images.map((url) => ({ url })),
       };
-      const listing = await createListing(payload);
-      toast.success("Annonce publiée !");
-      navigate(`/listings/${listing.id}`);
+      if (isEditMode) {
+        await updateListing(id, payload);
+        toast.success("Annonce mise à jour !");
+        navigate(`/listings/${id}`);
+      } else {
+        const listing = await createListing(payload);
+        toast.success("Annonce publiée !");
+        navigate(`/listings/${listing.id}`);
+      }
     } catch (err) {
       toast.error(err instanceof ApiError ? err.message : "Erreur lors de la publication.");
     } finally {
       setBusy(false);
     }
   };
+
+  if (loadingListing) {
+    return (
+      <div className={styles.page}>
+        <div className={styles.content}>
+          <div className={styles.step}>
+            <Skeleton variant="text" width="50%" height={28} />
+            <Skeleton height={160} style={{ marginTop: 16 }} />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.page}>
@@ -208,7 +262,7 @@ export default function SellPage() {
           </Button>
         ) : (
           <Button fullWidth size="lg" loading={busy} onClick={handlePublish}>
-            <Check size={16} strokeWidth={2.5} /> Publier l'annonce
+            <Check size={16} strokeWidth={2.5} /> {isEditMode ? "Enregistrer les modifications" : "Publier l'annonce"}
           </Button>
         )}
       </div>

@@ -49,3 +49,16 @@
   display: flex;
   gap: var(--space-3);
 }
+
+.filterLabel {
+  margin: 0;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--color-ink-soft);
+}
+
+.chipGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}

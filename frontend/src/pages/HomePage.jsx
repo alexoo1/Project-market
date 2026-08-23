@@ -4,6 +4,7 @@ import { getCategories, searchListings } from "../api/endpoints";
 import ListingCard, { ListingCardSkeleton } from "../components/ListingCard";
 import Chip from "../components/ui/Chip";
 import EmptyState from "../components/ui/EmptyState";
+import NotificationBell from "../components/ui/NotificationBell";
 import { useAuth } from "../context/AuthContext";
 import styles from "./HomePage.module.css";
 
@@ -31,8 +32,11 @@ export default function HomePage() {
   return (
     <div className={styles.page}>
       <div className={styles.header}>
-        {user && <p className={styles.location}>{user.city || "Côte d'Ivoire"}</p>}
-        <h1 className={styles.title}>Project Market</h1>
+        <div>
+          {user && <p className={styles.location}>{user.city || "Côte d'Ivoire"}</p>}
+          <h1 className={styles.title}>Project Market</h1>
+        </div>
+        <NotificationBell className={styles.bell} />
       </div>
 
       <div className={styles.chips}>

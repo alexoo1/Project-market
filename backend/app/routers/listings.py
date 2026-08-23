@@ -41,6 +41,8 @@ def _to_detail(listing: Listing) -> ListingDetailPublic:
         id=listing.id,
         title=listing.title,
         description=listing.description,
+        category_id=listing.category_id,
+        brand_id=listing.brand_id,
         price=int(listing.price),
         size=listing.size,
         color=listing.color,
@@ -73,6 +75,7 @@ def search_listings(
     q: str | None = None,
     category_id: uuid.UUID | None = None,
     brand_id: uuid.UUID | None = None,
+    seller_id: uuid.UUID | None = None,
     size: str | None = None,
     condition: ListingCondition | None = None,
     color: str | None = None,
@@ -89,7 +92,7 @@ def search_listings(
     Sans filtre, retourne le feed par défaut trié par nouveauté.
     """
     params = ListingSearchParams(
-        q=q, category_id=category_id, brand_id=brand_id, size=size, condition=condition,
+        q=q, category_id=category_id, brand_id=brand_id, seller_id=seller_id, size=size, condition=condition,
         color=color, city=city, price_min=price_min, price_max=price_max,
         sort=sort, page=page, page_size=page_size,
     )

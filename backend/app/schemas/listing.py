@@ -52,6 +52,16 @@ class ListingUpdateRequest(BaseModel):
     city: str | None = None
     district: str | None = None
     status: ListingStatus | None = None
+    images: list[ListingImageInput] | None = Field(default=None, max_length=8)
+
+    @field_validator("images")
+    @classmethod
+    def normalize_update_positions(cls, v: list[ListingImageInput] | None) -> list[ListingImageInput] | None:
+        if v is None:
+            return v
+        for idx, img in enumerate(v):
+            img.position = idx
+        return v
 
 
 class ListingCardPublic(BaseModel):
@@ -75,6 +85,8 @@ class ListingDetailPublic(BaseModel):
     id: uuid.UUID
     title: str
     description: str
+    category_id: uuid.UUID
+    brand_id: uuid.UUID | None
     price: int
     size: str | None
     color: str | None
@@ -93,6 +105,7 @@ class ListingSearchParams(BaseModel):
     q: str | None = None
     category_id: uuid.UUID | None = None
     brand_id: uuid.UUID | None = None
+    seller_id: uuid.UUID | None = None
     size: str | None = None
     condition: ListingCondition | None = None
     color: str | None = None

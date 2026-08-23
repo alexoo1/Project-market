@@ -6,6 +6,9 @@ import MessagesPage from "./pages/MessagesPage";
 import ChatPage from "./pages/ChatPage";
 import ProfilePage from "./pages/ProfilePage";
 import ListingDetailPage from "./pages/ListingDetailPage";
+import UserProfilePage from "./pages/UserProfilePage";
+import NotificationsPage from "./pages/NotificationsPage";
+import EditProfilePage from "./pages/EditProfilePage";
 import OrderDetailPage from "./pages/OrderDetailPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
@@ -24,10 +27,14 @@ export default function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/sell" element={<SellPage />} />
+        <Route path="/sell/:id" element={<SellPage />} />
         <Route path="/messages" element={<MessagesPage />} />
         <Route path="/messages/:id" element={<ChatPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/listings/:id" element={<ListingDetailPage />} />
+        <Route path="/users/:id" element={<UserProfilePage />} />
+        <Route path="/notifications" element={<NotificationsPage />} />
+        <Route path="/profile/edit" element={<EditProfilePage />} />
         <Route path="/orders/:id" element={<OrderDetailPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />

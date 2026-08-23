@@ -36,6 +36,15 @@ export const WALLET_TRANSACTION_LABELS = {
   withdrawal: "Retrait",
 };
 
+export const OFFER_STATUS_LABELS = {
+  pending: "En attente",
+  accepted: "Acceptée",
+  rejected: "Refusée",
+  countered: "Contre-offre",
+  expired: "Expirée",
+  purchased: "Achetée",
+};
+
 export const DELIVERY_METHOD_LABELS = {
   home_delivery: "Livraison à domicile",
   pickup_point: "Point relais",

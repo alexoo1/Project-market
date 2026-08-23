@@ -11,7 +11,20 @@
 }
 
 .header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
   margin-bottom: var(--space-4);
+}
+
+.bell {
+  margin-top: 2px;
+}
+
+@media (min-width: 768px) {
+  .bell {
+    display: none;
+  }
 }
 
 .location {

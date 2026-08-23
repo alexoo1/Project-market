@@ -20,6 +20,17 @@ export function logout() {
 export function getMe() {
   return api.get("/auth/me");
 }
+export function updateProfile(payload) {
+  return api.patch("/auth/me", payload);
+}
+export function changePassword(payload) {
+  return api.post("/auth/me/password", payload);
+}
+
+// --- Users (public) ---
+export function getUserProfile(userId) {
+  return api.get(`/users/${userId}`, { auth: false });
+}
 
 // --- Taxonomy ---
 export function getCategories() {

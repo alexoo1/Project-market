@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, MapPin, MessageCircle, Tag } from "lucide-react";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import { ArrowLeft, MapPin, MessageCircle, Tag, Pencil, Trash2 } from "lucide-react";
 import {
-  getListing, createOffer, purchaseListing, startConversation,
+  getListing, createOffer, purchaseListing, startConversation, deleteListing,
 } from "../api/endpoints";
 import { formatFCFA, CONDITION_LABELS, DELIVERY_METHOD_LABELS } from "../theme";
 import { useAuth } from "../context/AuthContext";
@@ -88,6 +88,20 @@ export default function ListingDetailPage() {
     }
   };
 
+  const handleDelete = async () => {
+    if (!window.confirm("Supprimer définitivement cette annonce ?")) return;
+    setBusy(true);
+    try {
+      await deleteListing(id);
+      toast.success("Annonce supprimée.");
+      navigate("/profile");
+    } catch (err) {
+      toast.error(err instanceof ApiError ? err.message : "Erreur");
+    } finally {
+      setBusy(false);
+    }
+  };
+
   if (error) {
     return (
       <div className={styles.page}>
@@ -143,7 +157,7 @@ export default function ListingDetailPage() {
         <p className={styles.description}>{listing.description}</p>
 
         {listing.seller && (
-          <div className={styles.sellerRow}>
+          <Link to={`/users/${listing.seller.id}`} className={styles.sellerRow}>
             <UserAvatar name={listing.seller.display_name} src={listing.seller.profile_photo_url} />
             <div>
               <p className={styles.sellerName}>{listing.seller.display_name}</p>
@@ -152,10 +166,19 @@ export default function ListingDetailPage() {
                 <span>({listing.seller.review_count})</span>
               </div>
             </div>
-          </div>
+          </Link>
         )}
 
-        {isOwner && <p className={styles.ownerNote}>C'est ton annonce.</p>}
+        {isOwner && (
+          <div className={styles.ownerActions}>
+            <Button variant="secondary" onClick={() => navigate(`/sell/${id}`)}>
+              <Pencil size={15} strokeWidth={2} /> Modifier
+            </Button>
+            <Button variant="danger" onClick={handleDelete} loading={busy}>
+              <Trash2 size={15} strokeWidth={2} /> Supprimer
+            </Button>
+          </div>
+        )}
       </div>
 
       {!isOwner && listing.status === "active" && (

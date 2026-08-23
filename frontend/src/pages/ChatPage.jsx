@@ -10,21 +10,18 @@ import { formatMessageTime } from "../utils/formatTime";
 import styles from "./ChatPage.module.css";
 
 function UserHeader({ other, listing }) {
-  const content = (
-    <>
-      <UserAvatar name={other.display_name} src={other.profile_photo_url} size="sm" />
-      <div>
+  return (
+    <div className={styles.headerUser}>
+      <Link to={`/users/${other.id}`} className={styles.headerIdentity}>
+        <UserAvatar name={other.display_name} src={other.profile_photo_url} size="sm" />
         <p className={styles.headerName}>{other.display_name}</p>
-        {listing && <p className={styles.headerListing}>{listing.title}</p>}
-      </div>
-    </>
-  );
-  return listing ? (
-    <Link to={`/listings/${listing.id}`} className={styles.headerUser}>
-      {content}
-    </Link>
-  ) : (
-    <div className={styles.headerUser}>{content}</div>
+      </Link>
+      {listing && (
+        <Link to={`/listings/${listing.id}`} className={styles.headerListing}>
+          {listing.title}
+        </Link>
+      )}
+    </div>
   );
 }
 
