@@ -1,5 +1,5 @@
 """
-Configuration centralisée de Project Market.
+Configuration centralisée de Vendi Market.
 
 Toute valeur "métier" (frais de plateforme, expiration des tokens, etc.)
 doit être définie ICI et nulle part ailleurs dans le code, conformément
@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     # --- Application ---
-    PROJECT_NAME: str = "Project Market"
+    PROJECT_NAME: str = "Vendi Market"
     API_V1_PREFIX: str = "/api/v1"
     ENVIRONMENT: str = "development"  # development | staging | production
     DEBUG: bool = True
@@ -49,8 +49,9 @@ class Settings(BaseSettings):
     UPLOAD_ALLOWED_CONTENT_TYPES: list[str] = ["image/jpeg", "image/png", "image/webp"]
 
     # --- Monétisation (configurable, jamais en dur dans le code métier) ---
+    # Payés uniquement par l'acheteur, aucun minimum/frais fixe, le vendeur
+    # reçoit toujours 100% du prix qu'il a fixé (cf. app/core/pricing.py).
     BUYER_PROTECTION_FEE_PERCENT: float = 5.0  # en pourcentage du prix article
-    BUYER_PROTECTION_FEE_MIN_XOF: int = 300     # minimum en FCFA
 
     # --- Boosts ---
     BOOST_DURATIONS_HOURS: list[int] = [24, 72, 168]  # 24h, 3j, 7j

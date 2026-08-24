@@ -34,7 +34,7 @@ export default function HomePage() {
       <div className={styles.header}>
         <div>
           {user && <p className={styles.location}>{user.city || "Côte d'Ivoire"}</p>}
-          <h1 className={styles.title}>Project Market</h1>
+          <h1 className={styles.title}>Vendi Market</h1>
         </div>
         <NotificationBell className={styles.bell} />
       </div>

@@ -15,11 +15,11 @@ _METHOD_COSTS = {
 class MockDeliveryProvider(DeliveryProvider):
     def quote(self, city: str, delivery_method: str) -> DeliveryQuote:
         cost = _METHOD_COSTS.get(delivery_method, 1500)
-        return DeliveryQuote(cost=cost, carrier="Livreur Project Market", estimated_days=2)
+        return DeliveryQuote(cost=cost, carrier="Livreur Vendi Market", estimated_days=2)
 
     def dispatch(self, order_id: str, address: str) -> DeliveryDispatchResult:
-        tracking_number = f"PM-{uuid.uuid4().hex[:10].upper()}"
-        return DeliveryDispatchResult(tracking_number=tracking_number, carrier="Livreur Project Market", status="in_transit")
+        tracking_number = f"VM-{uuid.uuid4().hex[:10].upper()}"
+        return DeliveryDispatchResult(tracking_number=tracking_number, carrier="Livreur Vendi Market", status="in_transit")
 
 
 def get_delivery_provider() -> DeliveryProvider:

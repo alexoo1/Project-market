@@ -1,4 +1,4 @@
-// Client API central pour Project Market.
+// Client API central pour Vendi Market.
 // L'URL du backend est configurable via une variable d'environnement Vite,
 // pour ne jamais coder en dur l'adresse du serveur (dev vs prod).
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000/api/v1";

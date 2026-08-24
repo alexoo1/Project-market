@@ -91,6 +91,23 @@ def test_full_purchase_flow_direct_buy(client, category):
     assert listing_final["status"] == "sold"
 
 
+def test_platform_fee_has_no_minimum_floor(client, category):
+    """5% strict, aucun plancher — même sur un article très bon marché."""
+    seller_token = _register(client, "+2250733333310", "seller_ord_fee")
+    buyer_token = _register(client, "+2250733333311", "buyer_ord_fee")
+    listing_id = _create_listing(client, seller_token, category.id, price=1000)
+
+    order_resp = client.post(
+        f"/api/v1/listings/{listing_id}/purchase",
+        json={"delivery_method": "hand_delivery", "payment_method": "mock"},
+        headers={"Authorization": f"Bearer {buyer_token}"},
+    )
+    assert order_resp.status_code == 201
+    order = order_resp.json()
+    assert order["item_price"] == 1000
+    assert order["platform_fee"] == 50  # 5% de 1000, sans plancher (aurait été 300 avant)
+
+
 def test_purchase_from_accepted_offer_uses_offer_amount(client, category):
     seller_token = _register(client, "+2250733333303", "seller_ord2")
     buyer_token = _register(client, "+2250733333304", "buyer_ord2")

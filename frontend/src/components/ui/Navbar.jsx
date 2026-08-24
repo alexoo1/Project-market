@@ -18,7 +18,7 @@ export default function Navbar() {
     <header className={styles.header}>
       <div className={styles.inner}>
         <Link to="/" className={styles.logo}>
-          Project Market
+          Vendi Market
         </Link>
 
         <nav className={styles.links} aria-label="Navigation principale">

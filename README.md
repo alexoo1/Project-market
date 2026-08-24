@@ -1,8 +1,8 @@
-# Project Market — MVP Marketplace Seconde Main (Côte d'Ivoire)
+# Vendi Market — MVP Marketplace Seconde Main (Côte d'Ivoire)
 
-Nom de code temporaire pour la marketplace de seconde main inspirée de Vinted,
-pensée d'abord pour la Côte d'Ivoire. Ce dépôt contient la **Phase 1** :
-architecture, infrastructure Docker/PostgreSQL, et authentification complète.
+Marketplace de seconde main inspirée de Vinted, pensée d'abord pour la
+Côte d'Ivoire. Ce dépôt contient la **Phase 1** : architecture,
+infrastructure Docker/PostgreSQL, et authentification complète.
 
 ## État d'avancement
 

@@ -1,4 +1,4 @@
-# Guide de déploiement — Project Market
+# Guide de déploiement — Vendi Market
 
 Ce guide déploie le backend (FastAPI + PostgreSQL) sur **Railway** et le
 frontend (React) sur **Vercel**. Les deux ont un plan gratuit suffisant pour
@@ -59,9 +59,9 @@ expédier, confirmer réception, laisser un avis.
 
 ## Nom de domaine personnalisé (optionnel)
 
-Une fois que tu as choisi le nom définitif de l'app (au lieu de "Project
-Market") et acheté un domaine (ex. via Namecheap, environ 10-15$/an pour un
-`.com`, ou un `.ci` via un registrar local ivoirien si disponible):
+Une fois que tu as acheté un domaine pour Vendi Market (ex. via Namecheap,
+environ 10-15$/an pour un `.com`, ou un `.ci` via un registrar local
+ivoirien si disponible):
 
 - Sur Vercel: Settings → Domains → ajoute ton domaine, suis les instructions DNS.
 - Sur Railway: Settings → Networking → Custom Domain, même logique pour l'API si tu veux une URL type `api.tonapp.com`.
