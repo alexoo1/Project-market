@@ -10,7 +10,7 @@
   font-family: var(--font-heading);
   font-size: var(--text-xl);
   font-weight: 700;
-  color: var(--color-lagoon);
+  color: var(--color-lagoon-bright);
   letter-spacing: -0.01em;
 }
 

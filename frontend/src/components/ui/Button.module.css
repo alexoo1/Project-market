@@ -51,8 +51,8 @@
 
 .secondary {
   background: transparent;
-  color: var(--color-lagoon);
-  border: 1.5px solid var(--color-lagoon);
+  color: var(--color-lagoon-bright);
+  border: 1.5px solid var(--color-lagoon-bright);
 }
 .secondary:hover:not(:disabled) {
   background: var(--color-lagoon);

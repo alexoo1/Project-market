@@ -18,7 +18,7 @@
   padding: 0 40px;
   border-radius: var(--radius-full);
   border: 1.5px solid var(--color-border);
-  background: var(--color-white);
+  background: var(--color-surface);
   font-size: var(--text-md);
   color: var(--color-ink);
   outline: none;
@@ -34,7 +34,7 @@
 }
 
 .input:focus-visible {
-  border-color: var(--color-lagoon);
+  border-color: var(--color-lagoon-bright);
 }
 
 .clear {

@@ -1,6 +1,6 @@
 .app {
   min-height: 100vh;
-  background: var(--color-sand);
+  background: var(--color-bg);
   color: var(--color-ink);
   font-family: var(--font-body);
 }

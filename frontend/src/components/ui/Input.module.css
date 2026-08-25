@@ -30,7 +30,7 @@
   padding: 0 var(--space-4);
   border-radius: var(--radius-md);
   border: 1.5px solid var(--color-border);
-  background: var(--color-white);
+  background: var(--color-surface);
   font-size: var(--text-md);
   color: var(--color-ink);
   outline: none;
@@ -42,7 +42,7 @@
 }
 
 .input:focus-visible {
-  border-color: var(--color-lagoon);
+  border-color: var(--color-lagoon-bright);
 }
 
 .input.hasError {

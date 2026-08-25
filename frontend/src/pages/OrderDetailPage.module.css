@@ -14,11 +14,11 @@
   font-family: var(--font-heading);
   font-size: var(--text-lg);
   font-weight: 700;
-  color: var(--color-lagoon);
+  color: var(--color-lagoon-bright);
 }
 
 .card {
-  background: var(--color-white);
+  background: var(--color-surface);
   border-radius: var(--radius-lg);
   padding: var(--space-4);
   box-shadow: var(--shadow-sm);
@@ -68,7 +68,7 @@
 
 .reviewCard {
   margin-top: var(--space-4);
-  background: var(--color-white);
+  background: var(--color-surface);
   border-radius: var(--radius-lg);
   padding: var(--space-4);
   display: flex;
@@ -89,6 +89,8 @@
   padding: var(--space-3);
   border-radius: var(--radius-md);
   border: 1.5px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-ink);
   font-family: inherit;
   font-size: var(--text-sm);
   resize: vertical;
@@ -96,5 +98,5 @@
 }
 
 .textarea:focus-visible {
-  border-color: var(--color-lagoon);
+  border-color: var(--color-lagoon-bright);
 }

@@ -3,12 +3,6 @@
   max-width: 1080px;
   margin: 0 auto;
   min-height: 100dvh;
-  background: var(--color-ink);
-  color: var(--color-white);
-}
-
-.page :focus-visible {
-  outline-color: var(--color-gold);
 }
 
 @media (min-width: 768px) {
@@ -26,11 +20,11 @@
 
 .header .bell {
   margin-top: 2px;
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--color-ink-soft);
 }
 
 .header .bell:hover {
-  color: var(--color-white);
+  color: var(--color-ink);
 }
 
 @media (min-width: 768px) {
@@ -54,7 +48,7 @@
 
 .location {
   font-size: var(--text-xs);
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--color-ink-faint);
   margin: 0 0 2px;
 }
 
@@ -62,7 +56,7 @@
   font-family: var(--font-heading);
   font-size: var(--text-xl);
   font-weight: 700;
-  color: var(--color-white);
+  color: var(--color-ink);
   margin: 0;
 }
 
@@ -76,7 +70,7 @@
 .searchIcon {
   position: absolute;
   left: var(--space-4);
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--color-ink-faint);
   pointer-events: none;
 }
 
@@ -85,16 +79,16 @@
   min-height: var(--tap-target-min);
   padding: 0 var(--space-4) 0 42px;
   border-radius: var(--radius-full);
-  border: 1.5px solid rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.07);
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface);
   font-size: var(--text-md);
-  color: var(--color-white);
+  color: var(--color-ink);
   outline: none;
   transition: border-color var(--duration-fast) var(--ease-standard);
 }
 
 .searchInput::placeholder {
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--color-ink-faint);
 }
 
 .searchInput:focus-visible {
@@ -107,7 +101,7 @@
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--color-ink-faint);
 }
 
 .grid {
@@ -136,10 +130,10 @@
 .tile {
   position: relative;
   aspect-ratio: 4 / 3;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: var(--space-4);
-  background: #201F1B;
+  background: var(--color-surface);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -152,7 +146,7 @@
 }
 
 .tile:hover {
-  background: #29281F;
+  background: var(--color-sand-deep);
 }
 
 .tile:active {
@@ -163,7 +157,7 @@
   font-family: var(--font-heading);
   font-size: var(--text-md);
   font-weight: 700;
-  color: var(--color-white);
+  color: var(--color-ink);
   line-height: 1.2;
 }
 
@@ -173,5 +167,5 @@
 
 .tone1 { color: var(--color-gold); }
 .tone2 { color: var(--color-coral); }
-.tone3 { color: #7EBB8E; }
+.tone3 { color: var(--color-lagoon-bright); }
 .tone4 { color: #6FA8DC; }

@@ -31,7 +31,7 @@
   width: 100%;
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-md);
-  background: var(--color-ink);
+  background: var(--color-surface);
   color: var(--color-white);
   box-shadow: var(--shadow-md);
   font-size: var(--text-sm);
@@ -58,13 +58,13 @@
 }
 
 .success svg:first-child {
-  color: #6FCF97;
+  color: var(--color-success);
 }
 
 .error svg:first-child {
-  color: #EB5757;
+  color: var(--color-danger);
 }
 
 .info svg:first-child {
-  color: #56CCF2;
+  color: var(--color-info);
 }

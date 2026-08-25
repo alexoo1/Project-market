@@ -19,7 +19,7 @@
   max-width: 560px;
   max-height: 85vh;
   overflow-y: auto;
-  background: var(--color-white);
+  background: var(--color-surface);
   border-radius: var(--radius-xl) var(--radius-xl) 0 0;
   box-shadow: var(--shadow-md);
   padding-bottom: env(safe-area-inset-bottom, 0px);

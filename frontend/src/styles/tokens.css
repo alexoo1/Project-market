@@ -3,6 +3,7 @@
   --color-lagoon: #0E3B36;
   --color-lagoon-soft: #164F48;
   --color-lagoon-deep: #032F2D;
+  --color-lagoon-bright: #7EBB8E;
   --color-coral: #EF5A3C;
   --color-coral-soft: #F7846B;
   --color-gold: #FFB22B;
@@ -11,24 +12,26 @@
   --gradient-brand: linear-gradient(135deg, var(--color-coral) 0%, var(--color-gold-deep) 60%, var(--color-gold) 100%);
   --gradient-surface: linear-gradient(160deg, var(--color-lagoon) 0%, var(--color-lagoon-deep) 100%);
 
-  /* Color — neutrals (fond en blanc pur, sand-deep reste la teinte secondaire chaude) */
+  /* Color — neutrals (thème sombre : fond quasi-noir chaud, surfaces élevées en gris-brun) */
+  --color-bg: #161512;
+  --color-surface: #201F1B;
   --color-sand: #FFFFFF;
-  --color-sand-deep: #EDE4D3;
+  --color-sand-deep: #29281F;
   --color-white: #FFFFFF;
-  --color-ink: #161512;
-  --color-ink-soft: #6B655A;
-  --color-ink-faint: #A39C8C;
-  --color-border: #E4DCC9;
+  --color-ink: #F2EDE3;
+  --color-ink-soft: #A9A192;
+  --color-ink-faint: #726B5C;
+  --color-border: rgba(255, 255, 255, 0.1);
 
   /* Color — semantic */
-  --color-success: #1E7A4C;
-  --color-success-bg: #E7F3EC;
-  --color-warning: #B8792A;
-  --color-warning-bg: #FBF0DF;
-  --color-danger: #C0392B;
-  --color-danger-bg: #FBEAE7;
-  --color-info: #2A5FB8;
-  --color-info-bg: #E9F0FB;
+  --color-success: #34D399;
+  --color-success-bg: rgba(52, 211, 153, 0.16);
+  --color-warning: #F2A93C;
+  --color-warning-bg: rgba(242, 169, 60, 0.16);
+  --color-danger: #FF6259;
+  --color-danger-bg: rgba(255, 98, 89, 0.16);
+  --color-info: #5B9DF5;
+  --color-info-bg: rgba(91, 157, 245, 0.16);
 
   /* Type */
   --font-heading: 'Space Grotesk', sans-serif;
@@ -58,13 +61,13 @@
   --radius-xl: 24px;
   --radius-full: 999px;
 
-  /* Shadow — restrained, teintées de la couleur de marque plutôt que du noir pur */
-  --shadow-sm: 0 1px 3px rgba(4, 26, 24, 0.09);
-  --shadow-md: 0 8px 24px rgba(4, 26, 24, 0.14);
-  --shadow-lg: 0 16px 40px rgba(4, 26, 24, 0.20);
+  /* Shadow — noir pur, plus opaque pour rester visible sur fond sombre */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.6);
 
   /* Verre dépoli pour les barres fixes (nav, actionBar, composer) */
-  --glass-bg: rgba(255, 255, 255, 0.72);
+  --glass-bg: rgba(20, 19, 16, 0.78);
   --glass-blur: saturate(180%) blur(16px);
 
   /* Motion */

@@ -124,11 +124,13 @@
   padding: 0 var(--space-4);
   border-radius: var(--radius-full);
   border: 1.5px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-ink);
   font-size: var(--text-md);
   outline: none;
   transition: border-color var(--duration-fast) var(--ease-standard);
 }
 
 .input:focus-visible {
-  border-color: var(--color-lagoon);
+  border-color: var(--color-lagoon-bright);
 }

@@ -17,7 +17,7 @@
   gap: var(--space-3);
   padding: var(--space-3);
   border-radius: var(--radius-lg);
-  background: var(--color-white);
+  background: var(--color-surface);
   box-shadow: var(--shadow-sm);
   border: none;
   text-align: left;

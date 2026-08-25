@@ -40,7 +40,7 @@
 }
 
 .active {
-  color: var(--color-lagoon);
+  color: var(--color-lagoon-bright);
 }
 
 .centerSlot {

@@ -12,7 +12,7 @@ body {
   margin: 0;
   font-family: var(--font-body);
   color: var(--color-ink);
-  background: var(--color-sand);
+  background: var(--color-bg);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -37,7 +37,7 @@ button {
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-lagoon);
+  outline: 2px solid var(--color-gold);
   outline-offset: 2px;
   border-radius: var(--radius-sm);
 }

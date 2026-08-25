@@ -34,12 +34,12 @@
 }
 
 .solid {
-  background: var(--color-white);
+  background: var(--color-surface);
   color: var(--color-ink);
   box-shadow: var(--shadow-sm);
 }
 .solid:hover {
-  background: var(--color-sand);
+  background: var(--color-sand-deep);
 }
 
 .filled {
