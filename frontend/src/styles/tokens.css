@@ -1,9 +1,15 @@
 :root {
-  /* Color — brand */
+  /* Color — brand (aligné sur le logo : vert profond + accent doré) */
   --color-lagoon: #0E3B36;
   --color-lagoon-soft: #164F48;
+  --color-lagoon-deep: #032F2D;
   --color-coral: #EF5A3C;
   --color-coral-soft: #F7846B;
+  --color-gold: #FFB22B;
+  --color-gold-deep: #FF6F22;
+
+  --gradient-brand: linear-gradient(135deg, var(--color-coral) 0%, var(--color-gold-deep) 60%, var(--color-gold) 100%);
+  --gradient-surface: linear-gradient(160deg, var(--color-lagoon) 0%, var(--color-lagoon-deep) 100%);
 
   /* Color — neutrals */
   --color-sand: #F6F1E7;
@@ -52,9 +58,14 @@
   --radius-xl: 24px;
   --radius-full: 999px;
 
-  /* Shadow — restrained to 2 levels */
-  --shadow-sm: 0 1px 3px rgba(22, 21, 18, 0.08);
-  --shadow-md: 0 4px 16px rgba(22, 21, 18, 0.12);
+  /* Shadow — restrained, teintées de la couleur de marque plutôt que du noir pur */
+  --shadow-sm: 0 1px 3px rgba(4, 26, 24, 0.09);
+  --shadow-md: 0 8px 24px rgba(4, 26, 24, 0.14);
+  --shadow-lg: 0 16px 40px rgba(4, 26, 24, 0.20);
+
+  /* Verre dépoli pour les barres fixes (nav, actionBar, composer) */
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --glass-blur: saturate(180%) blur(16px);
 
   /* Motion */
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);

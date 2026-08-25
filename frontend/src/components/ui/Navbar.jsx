@@ -18,6 +18,7 @@ export default function Navbar() {
     <header className={styles.header}>
       <div className={styles.inner}>
         <Link to="/" className={styles.logo}>
+          <img src="/favicon.svg" alt="" className={styles.logoMark} />
           Vendi Market
         </Link>
 

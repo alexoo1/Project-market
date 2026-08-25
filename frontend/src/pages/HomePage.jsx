@@ -32,9 +32,12 @@ export default function HomePage() {
   return (
     <div className={styles.page}>
       <div className={styles.header}>
-        <div>
-          {user && <p className={styles.location}>{user.city || "Côte d'Ivoire"}</p>}
-          <h1 className={styles.title}>Vendi Market</h1>
+        <div className={styles.titleRow}>
+          <img src="/favicon.svg" alt="" className={styles.logoMark} />
+          <div>
+            {user && <p className={styles.location}>{user.city || "Côte d'Ivoire"}</p>}
+            <h1 className={styles.title}>Vendi Market</h1>
+          </div>
         </div>
         <NotificationBell className={styles.bell} />
       </div>

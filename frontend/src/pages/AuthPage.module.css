@@ -4,11 +4,19 @@
   align-items: center;
   justify-content: center;
   padding: var(--space-6) var(--space-5);
+  background:
+    radial-gradient(560px circle at 15% -10%, rgba(255, 178, 43, 0.16), transparent 60%),
+    radial-gradient(480px circle at 100% 0%, rgba(14, 59, 54, 0.14), transparent 55%),
+    var(--color-sand);
 }
 
 .card {
   width: 100%;
   max-width: 380px;
+  background: var(--color-white);
+  border-radius: var(--radius-xl);
+  padding: var(--space-8) var(--space-6);
+  box-shadow: var(--shadow-lg);
 }
 
 .eyebrow {
