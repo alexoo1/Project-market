@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  Search as SearchIcon, Venus, Mars, Baby, Footprints, ShoppingBag, Gem, Shirt, Zap, Tag,
+  Search as SearchIcon, Venus, Mars, Crown, Baby, Home as HomeIcon,
+  Smartphone, BookOpen, Puzzle, Dumbbell, Tag,
 } from "lucide-react";
 import { getCategories } from "../api/endpoints";
 import NotificationBell from "../components/ui/NotificationBell";
@@ -10,14 +11,15 @@ import { useAuth } from "../context/AuthContext";
 import styles from "./HomePage.module.css";
 
 const CATEGORY_ICONS = {
-  femme: Venus,
-  homme: Mars,
-  enfant: Baby,
-  chaussures: Footprints,
-  sacs: ShoppingBag,
-  accessoires: Gem,
-  streetwear: Shirt,
-  sneakers: Zap,
+  femmes: Venus,
+  hommes: Mars,
+  "articles-de-createurs": Crown,
+  enfants: Baby,
+  maison: HomeIcon,
+  electronique: Smartphone,
+  "livres-et-medias": BookOpen,
+  "loisirs-et-collections": Puzzle,
+  sport: Dumbbell,
 };
 
 const ICON_TONES = ["tone1", "tone2", "tone3", "tone4"];
@@ -75,13 +77,13 @@ export default function HomePage() {
 
       {categories === null ? (
         <div className={styles.grid}>
-          {Array.from({ length: 8 }).map((_, i) => (
+          {Array.from({ length: 9 }).map((_, i) => (
             <Skeleton key={i} height={140} className={styles.tileSkeleton} />
           ))}
         </div>
       ) : (
         <div className={styles.grid}>
-          {categories.map((c, i) => {
+          {categories.filter((c) => !c.parent_id).map((c, i) => {
             const Icon = CATEGORY_ICONS[c.slug] || Tag;
             return (
               <button key={c.id} type="button" className={styles.tile} onClick={() => openCategory(c)}>

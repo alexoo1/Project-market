@@ -4,6 +4,9 @@ import {
   ArrowLeft, Search as SearchIcon, ChevronRight, Grid3x3,
   Shirt, Footprints, ShoppingBag, Gem, Sparkles, Watch, Glasses,
   Baby, Backpack, Luggage, Dumbbell, Zap, Crown, Tag,
+  Lamp, UtensilsCrossed, Archive, Trees, Smartphone, Laptop,
+  Headphones, Gamepad2, Camera, BookOpen, Film, Music, Dices,
+  Palette, Bike,
 } from "lucide-react";
 import { getCategories } from "../api/endpoints";
 import IconButton from "../components/ui/IconButton";
@@ -15,6 +18,8 @@ const KEYWORD_ICONS = [
   [["chaussure", "basket", "sandale", "mocassin", "botte", "talon"], Footprints],
   [["running", "skate"], Zap],
   [["basketball", "sport"], Dumbbell],
+  [["fitness", "musculation"], Dumbbell],
+  [["velo"], Bike],
   [["sac a dos"], Backpack],
   [["valise"], Luggage],
   [["sac"], ShoppingBag],
@@ -24,6 +29,20 @@ const KEYWORD_ICONS = [
   [["beaute", "soin"], Sparkles],
   [["jouet", "puericulture", "fille", "garcon"], Baby],
   [["edition limitee", "lifestyle"], Crown],
+  [["decoration"], Lamp],
+  [["cuisine"], UtensilsCrossed],
+  [["rangement"], Archive],
+  [["jardin"], Trees],
+  [["telephone"], Smartphone],
+  [["ordinateur", "tablette"], Laptop],
+  [["audio", "casque"], Headphones],
+  [["console", "jeu video"], Gamepad2],
+  [["photo", "camera"], Camera],
+  [["livre", "manga", "bd"], BookOpen],
+  [["film", "serie"], Film],
+  [["musique", "instrument"], Music],
+  [["jeu de societe"], Dices],
+  [["art", "collection", "loisir creatif"], Palette],
 ];
 
 function normalize(str) {
