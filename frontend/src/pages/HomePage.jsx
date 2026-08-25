@@ -38,7 +38,7 @@ export default function HomePage() {
   };
 
   const openCategory = (c) => {
-    navigate("/search", { state: { categoryId: c.id, categoryName: c.name } });
+    navigate(`/categories/${c.id}`, { state: { categoryName: c.name } });
   };
 
   return (

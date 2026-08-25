@@ -1,9 +1,10 @@
 import uuid
 
-from sqlalchemy import func, select
+from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session, joinedload, selectinload
 
 from app.models.boost import ListingBoost
+from app.models.category import Category
 from app.models.enums import ListingStatus
 from app.models.listing import Listing
 from app.schemas.listing import ListingSearchParams
@@ -39,7 +40,13 @@ class ListingRepository:
             like = f"%{params.q.lower()}%"
             stmt = stmt.where(func.lower(Listing.title).like(like))
         if params.category_id:
-            stmt = stmt.where(Listing.category_id == params.category_id)
+            # Une recherche sur une catégorie parente inclut ses sous-catégories
+            # (ex: "Tous" sous Femme doit remonter les annonces taguées en
+            # Femme > Vêtements, Femme > Chaussures, etc.).
+            matching_category_ids = select(Category.id).where(
+                or_(Category.id == params.category_id, Category.parent_id == params.category_id)
+            )
+            stmt = stmt.where(Listing.category_id.in_(matching_category_ids))
         if params.brand_id:
             stmt = stmt.where(Listing.brand_id == params.brand_id)
         if params.seller_id:

@@ -136,6 +136,32 @@ def test_update_listing_can_replace_images(client, category):
     assert images[1]["position"] == 1
 
 
+def test_search_by_parent_category_includes_subcategories(client, db_session):
+    parent = Category(name="Femme", slug="femme-hier-test")
+    db_session.add(parent)
+    db_session.commit()
+    db_session.refresh(parent)
+    child = Category(name="Vêtements", slug="femme-hier-test-vetements", parent_id=parent.id)
+    other = Category(name="Homme", slug="homme-hier-test")
+    db_session.add_all([child, other])
+    db_session.commit()
+    db_session.refresh(child)
+    db_session.refresh(other)
+
+    token = _register(client, "+2250711111112", "seller_hier")
+    headers = {"Authorization": f"Bearer {token}"}
+    client.post("/api/v1/listings", json=_listing_payload(parent.id, title="Robe directement en Femme"), headers=headers)
+    client.post("/api/v1/listings", json=_listing_payload(child.id, title="Robe en Femme > Vêtements"), headers=headers)
+    client.post("/api/v1/listings", json=_listing_payload(other.id, title="Article Homme"), headers=headers)
+
+    resp = client.get(f"/api/v1/listings?category_id={parent.id}")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["total"] == 2
+    titles = {item["title"] for item in body["items"]}
+    assert titles == {"Robe directement en Femme", "Robe en Femme > Vêtements"}
+
+
 def test_search_filters_by_seller_id(client, category):
     seller_a = _register(client, "+2250711111108", "seller_a")
     seller_b = _register(client, "+2250711111109", "seller_b")

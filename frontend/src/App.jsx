@@ -1,6 +1,7 @@
 import { Routes, Route, useLocation } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import SearchPage from "./pages/SearchPage";
+import CategoryDetailPage from "./pages/CategoryDetailPage";
 import SellPage from "./pages/SellPage";
 import MessagesPage from "./pages/MessagesPage";
 import ChatPage from "./pages/ChatPage";
@@ -26,6 +27,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/search" element={<SearchPage />} />
+        <Route path="/categories/:id" element={<CategoryDetailPage />} />
         <Route path="/sell" element={<SellPage />} />
         <Route path="/sell/:id" element={<SellPage />} />
         <Route path="/messages" element={<MessagesPage />} />
