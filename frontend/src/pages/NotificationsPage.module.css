@@ -18,6 +18,7 @@
   padding: var(--space-3);
   border-radius: var(--radius-lg);
   background: var(--color-white);
+  box-shadow: var(--shadow-sm);
   border: none;
   text-align: left;
   cursor: pointer;

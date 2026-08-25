@@ -11,8 +11,8 @@
   --gradient-brand: linear-gradient(135deg, var(--color-coral) 0%, var(--color-gold-deep) 60%, var(--color-gold) 100%);
   --gradient-surface: linear-gradient(160deg, var(--color-lagoon) 0%, var(--color-lagoon-deep) 100%);
 
-  /* Color — neutrals */
-  --color-sand: #F6F1E7;
+  /* Color — neutrals (fond en blanc pur, sand-deep reste la teinte secondaire chaude) */
+  --color-sand: #FFFFFF;
   --color-sand-deep: #EDE4D3;
   --color-white: #FFFFFF;
   --color-ink: #161512;

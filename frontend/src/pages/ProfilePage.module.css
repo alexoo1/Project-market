@@ -52,6 +52,7 @@
   background: var(--color-white);
   border-radius: var(--radius-lg);
   padding: var(--space-3);
+  box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
@@ -119,11 +120,12 @@
   border-radius: var(--radius-lg);
   text-decoration: none;
   color: inherit;
+  box-shadow: var(--shadow-sm);
   transition: box-shadow var(--duration-fast) var(--ease-standard);
 }
 
 .orderRow:hover {
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
 }
 
 .orderIcon {
@@ -198,6 +200,7 @@
   padding: var(--space-3);
   background: var(--color-white);
   border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
 }
 
 .creditIcon {

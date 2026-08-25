@@ -91,7 +91,7 @@
 }
 
 .theirs .bubble {
-  background: var(--color-white);
+  background: var(--color-sand-deep);
   color: var(--color-ink);
   border-bottom-left-radius: var(--radius-sm);
 }
