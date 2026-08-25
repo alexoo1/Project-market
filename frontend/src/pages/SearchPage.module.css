@@ -4,6 +4,10 @@
   margin: 0 auto;
 }
 
+.categoryHeader {
+  margin-bottom: var(--space-3);
+}
+
 .searchRow {
   margin-bottom: var(--space-3);
 }

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { Search as SearchIcon, SlidersHorizontal, SearchX } from "lucide-react";
 import { searchListings, getCategories, getBrands } from "../api/endpoints";
 import { CONDITION_LABELS } from "../theme";
@@ -11,17 +12,20 @@ import Input from "../components/ui/Input";
 import Select from "../components/ui/Select";
 import Button from "../components/ui/Button";
 import EmptyState from "../components/ui/EmptyState";
+import SectionHeader from "../components/ui/SectionHeader";
 import styles from "./SearchPage.module.css";
 
 const SORT_LABELS = { recent: "Nouveautés", price_asc: "Prix croissant", price_desc: "Prix décroissant" };
 
 export default function SearchPage() {
-  const [q, setQ] = useState("");
+  const location = useLocation();
+  const initial = location.state || {};
+  const [q, setQ] = useState(initial.q || "");
   const [priceMin, setPriceMin] = useState("");
   const [priceMax, setPriceMax] = useState("");
   const [city, setCity] = useState("");
   const [sort, setSort] = useState("recent");
-  const [categoryId, setCategoryId] = useState("");
+  const [categoryId, setCategoryId] = useState(initial.categoryId || "");
   const [brandId, setBrandId] = useState("");
   const [size, setSize] = useState("");
   const [condition, setCondition] = useState("");
@@ -72,6 +76,9 @@ export default function SearchPage() {
 
   return (
     <div className={styles.page}>
+      {initial.categoryName && (
+        <SectionHeader title={initial.categoryName} className={styles.categoryHeader} />
+      )}
       <div className={styles.searchRow}>
         <SearchInput
           placeholder="Rechercher un article, une marque..."
