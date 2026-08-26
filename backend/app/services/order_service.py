@@ -10,7 +10,7 @@ from app.repositories.listing_repository import ListingRepository
 from app.repositories.offer_repository import OfferRepository
 from app.repositories.order_repository import OrderRepository
 from app.schemas.order import PurchaseRequest
-from app.services.delivery.mock_provider import get_delivery_provider
+from app.services.delivery.yango_provider import get_delivery_provider
 from app.services.notification_service import NotificationService
 from app.services.payment.mock_provider import get_payment_provider
 from app.services.wallet_service import WalletService

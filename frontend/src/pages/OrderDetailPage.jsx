@@ -90,6 +90,7 @@ export default function OrderDetailPage() {
         <Row label="Frais plateforme" value={formatFCFA(order.platform_fee)} />
         <Row label="Livraison" value={formatFCFA(order.delivery_fee)} />
         <Row label="Total" value={formatFCFA(order.total)} strong />
+        {order.delivery?.carrier && <Row label="Transporteur" value={order.delivery.carrier} />}
         {order.delivery?.tracking_number && <Row label="Suivi" value={order.delivery.tracking_number} />}
       </div>
 

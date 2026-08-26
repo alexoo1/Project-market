@@ -215,6 +215,7 @@ export default function ListingDetailPage() {
               <option key={val} value={val}>{label}</option>
             ))}
           </Select>
+          <p className={styles.deliveryHint}>Livraison assurée par Yango.</p>
           <PaymentMethodPicker value={paymentMethod} onChange={setPaymentMethod} />
           <div className={styles.buyTotalRow}>
             <span>Total</span>
