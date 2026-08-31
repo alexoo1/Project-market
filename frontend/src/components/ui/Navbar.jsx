@@ -18,8 +18,8 @@ export default function Navbar() {
     <header className={styles.header}>
       <div className={styles.inner}>
         <Link to="/" className={styles.logo}>
-          <img src="/favicon.svg" alt="" className={styles.logoMark} />
-          Vendoo
+          <img src="/logo-mark.png" alt="" className={styles.logoMark} />
+          <img src="/wordmark.png" alt="Vendoo" className={styles.wordmark} />
         </Link>
 
         <nav className={styles.links} aria-label="Navigation principale">

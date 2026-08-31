@@ -47,10 +47,12 @@ export default function HomePage() {
     <div className={styles.page}>
       <div className={styles.header}>
         <div className={styles.titleRow}>
-          <img src="/favicon.svg" alt="" className={styles.logoMark} />
+          <img src="/logo-mark.png" alt="" className={styles.logoMark} />
           <div>
             {user && <p className={styles.location}>{user.city || "Côte d'Ivoire"}</p>}
-            <h1 className={styles.title}>Vendoo</h1>
+            <h1 className={styles.title}>
+              <img src="/wordmark.png" alt="Vendoo" className={styles.wordmark} />
+            </h1>
           </div>
         </div>
         <NotificationBell className={styles.bell} />
