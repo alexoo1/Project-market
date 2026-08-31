@@ -7,7 +7,6 @@ import {
 import { getCategories } from "../api/endpoints";
 import NotificationBell from "../components/ui/NotificationBell";
 import Skeleton from "../components/ui/Skeleton";
-import { useAuth } from "../context/AuthContext";
 import styles from "./HomePage.module.css";
 
 const CATEGORY_ICONS = {
@@ -25,7 +24,6 @@ const CATEGORY_ICONS = {
 const ICON_TONES = ["tone1", "tone2", "tone3", "tone4"];
 
 export default function HomePage() {
-  const { user } = useAuth();
   const navigate = useNavigate();
   const [categories, setCategories] = useState(null);
   const [q, setQ] = useState("");
@@ -48,12 +46,9 @@ export default function HomePage() {
       <div className={styles.header}>
         <div className={styles.titleRow}>
           <img src="/logo-mark.png" alt="" className={styles.logoMark} />
-          <div>
-            {user && <p className={styles.location}>{user.city || "Côte d'Ivoire"}</p>}
-            <h1 className={styles.title}>
-              <img src="/wordmark.png" alt="Vendoo" className={styles.wordmark} />
-            </h1>
-          </div>
+          <h1 className={styles.title}>
+            <img src="/wordmark.png" alt="Vendoo" className={styles.wordmark} />
+          </h1>
         </div>
         <NotificationBell className={styles.bell} />
       </div>
