@@ -19,7 +19,7 @@ export default function Navbar() {
       <div className={styles.inner}>
         <Link to="/" className={styles.logo}>
           <img src="/favicon.svg" alt="" className={styles.logoMark} />
-          Vendi Market
+          Vendoo
         </Link>
 
         <nav className={styles.links} aria-label="Navigation principale">

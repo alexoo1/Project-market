@@ -1,4 +1,4 @@
-# Guide de déploiement — Vendi Market
+# Guide de déploiement — Vendoo
 
 Ce guide déploie le backend (FastAPI + PostgreSQL) sur **Railway** et le
 frontend (React) sur **Vercel**. Les deux ont un plan gratuit suffisant pour
@@ -59,7 +59,7 @@ expédier, confirmer réception, laisser un avis.
 
 ## Nom de domaine personnalisé (optionnel)
 
-Une fois que tu as acheté un domaine pour Vendi Market (ex. via Namecheap,
+Une fois que tu as acheté un domaine pour Vendoo (ex. via Namecheap,
 environ 10-15$/an pour un `.com`, ou un `.ci` via un registrar local
 ivoirien si disponible):
 

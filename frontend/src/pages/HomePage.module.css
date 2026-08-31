@@ -165,7 +165,7 @@
   align-self: flex-end;
 }
 
-.tone1 { color: var(--color-gold); }
-.tone2 { color: var(--color-coral); }
-.tone3 { color: var(--color-lagoon-bright); }
-.tone4 { color: #6FA8DC; }
+.tone1 { color: var(--color-coral); }
+.tone2 { color: var(--color-coral-soft); }
+.tone3 { color: var(--color-gold-deep); }
+.tone4 { color: var(--color-lagoon-deep); }

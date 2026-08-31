@@ -50,7 +50,7 @@ export default function HomePage() {
           <img src="/favicon.svg" alt="" className={styles.logoMark} />
           <div>
             {user && <p className={styles.location}>{user.city || "Côte d'Ivoire"}</p>}
-            <h1 className={styles.title}>Vendi Market</h1>
+            <h1 className={styles.title}>Vendoo</h1>
           </div>
         </div>
         <NotificationBell className={styles.bell} />

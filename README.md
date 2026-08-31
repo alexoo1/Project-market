@@ -1,4 +1,4 @@
-# Vendi Market — MVP Marketplace Seconde Main (Côte d'Ivoire)
+# Vendoo — MVP Marketplace Seconde Main (Côte d'Ivoire)
 
 Marketplace de seconde main inspirée de Vinted, pensée d'abord pour la
 Côte d'Ivoire. Ce dépôt contient la **Phase 1** : architecture,

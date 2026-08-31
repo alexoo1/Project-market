@@ -1,5 +1,5 @@
 """
-Configuration centralisée de Vendi Market.
+Configuration centralisée de Vendoo.
 
 Toute valeur "métier" (frais de plateforme, expiration des tokens, etc.)
 doit être définie ICI et nulle part ailleurs dans le code, conformément
@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     # --- Application ---
-    PROJECT_NAME: str = "Vendi Market"
+    PROJECT_NAME: str = "Vendoo"
     API_V1_PREFIX: str = "/api/v1"
     ENVIRONMENT: str = "development"  # development | staging | production
     DEBUG: bool = True

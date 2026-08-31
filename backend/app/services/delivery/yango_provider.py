@@ -3,9 +3,9 @@ import uuid
 from app.services.delivery.base import DeliveryDispatchResult, DeliveryProvider, DeliveryQuote
 
 # Tarifs fixes simples pour le MVP (spec section 14: livraison à domicile,
-# point relais, remise en main propre). Yango gère la livraison pour Vendi
-# Market en Côte d'Ivoire — ce point de configuration unique permet de
-# brancher le vrai calcul par distance/poids de leur API plus tard.
+# point relais, remise en main propre). Yango gère la livraison pour Vendoo
+# en Côte d'Ivoire — ce point de configuration unique permet de brancher
+# le vrai calcul par distance/poids de leur API plus tard.
 _METHOD_COSTS = {
     "home_delivery": 2000,
     "pickup_point": 1000,
