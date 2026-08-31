@@ -8,7 +8,7 @@
 .imageWrap {
   position: relative;
   aspect-ratio: 3 / 4;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-image);
   overflow: hidden;
   background: var(--color-surface);
 }
@@ -40,7 +40,7 @@
   right: var(--space-2);
   width: 32px;
   height: 32px;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   border: none;
   background: rgba(255, 255, 255, 0.92);
   color: var(--color-ink);
@@ -66,7 +66,7 @@
   bottom: var(--space-2);
   padding: 3px var(--space-2);
   border-radius: var(--radius-sm);
-  background: rgba(22, 21, 18, 0.65);
+  background: rgba(25, 25, 25, 0.65);
   color: var(--color-white);
   font-size: 10.5px;
   font-weight: 600;
@@ -78,8 +78,8 @@
 }
 
 .price {
-  font-family: var(--font-heading);
-  font-size: var(--text-md);
+  font-family: var(--font-body);
+  font-size: var(--text-lg);
   font-weight: 700;
   margin: 0;
   color: var(--color-ink);

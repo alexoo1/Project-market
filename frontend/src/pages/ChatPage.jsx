@@ -82,7 +82,7 @@ export default function ChatPage() {
               <div className={styles.bubble}>{m.content}</div>
               <div className={styles.meta}>
                 <span>{formatMessageTime(m.created_at)}</span>
-                {isMine && (m.is_read ? <CheckCheck size={13} strokeWidth={2} /> : <Check size={13} strokeWidth={2} />)}
+                {isMine && (m.is_read ? <CheckCheck size={13} strokeWidth={1.75} /> : <Check size={13} strokeWidth={1.75} />)}
               </div>
             </div>
           );

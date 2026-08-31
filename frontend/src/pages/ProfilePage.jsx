@@ -83,19 +83,19 @@ export default function ProfilePage() {
         </div>
         <div className={styles.trustRow}>
           {user.city && (
-            <span className={styles.trustItem}><MapPin size={13} strokeWidth={2} /> {user.city}</span>
+            <span className={styles.trustItem}><MapPin size={13} strokeWidth={1.75} /> {user.city}</span>
           )}
           <span className={styles.trustItem}>
-            <Calendar size={13} strokeWidth={2} /> Membre depuis {new Date(user.created_at).getFullYear()}
+            <Calendar size={13} strokeWidth={1.75} /> Membre depuis {new Date(user.created_at).getFullYear()}
           </span>
         </div>
         <div className={styles.headerActions}>
           <Button variant="secondary" onClick={() => navigate("/profile/edit")}>
-            <Pencil size={14} strokeWidth={2} /> Modifier le profil
+            <Pencil size={20} strokeWidth={1.75} /> Modifier le profil
           </Button>
         </div>
         <button onClick={logout} className={styles.logout}>
-          <LogOut size={14} strokeWidth={2} /> Se déconnecter
+          <LogOut size={14} strokeWidth={1.75} /> Se déconnecter
         </button>
       </div>
 
@@ -176,9 +176,9 @@ function WalletTab({ wallet, onChanged }) {
               <div key={t.id} className={styles.transactionRow}>
                 <div className={[styles.orderIcon, isCredit ? styles.creditIcon : ""].filter(Boolean).join(" ")}>
                   {isCredit ? (
-                    <ArrowDownCircle size={17} strokeWidth={1.75} />
+                    <ArrowDownCircle size={20} strokeWidth={1.75} />
                   ) : (
-                    <ArrowUpCircle size={17} strokeWidth={1.75} />
+                    <ArrowUpCircle size={20} strokeWidth={1.75} />
                   )}
                 </div>
                 <div className={styles.orderInfo}>
@@ -349,7 +349,7 @@ function OrderList({ orders, role }) {
       {orders.map((o) => (
         <Link key={o.id} to={`/orders/${o.id}`} className={styles.orderRow}>
           <div className={styles.orderIcon}>
-            <Package size={17} strokeWidth={1.75} />
+            <Package size={20} strokeWidth={1.75} />
           </div>
           <div className={styles.orderInfo}>
             <p className={styles.orderPrice}>{formatFCFA(o.total)}</p>

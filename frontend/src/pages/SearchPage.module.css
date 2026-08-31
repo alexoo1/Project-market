@@ -1,15 +1,15 @@
 .page {
-  padding: var(--space-4) var(--space-4) 88px;
+  padding: var(--space-4) var(--page-margin) 88px;
   max-width: 1080px;
   margin: 0 auto;
 }
 
 .categoryHeader {
-  margin-bottom: var(--space-3);
+  margin-bottom: var(--space-4);
 }
 
 .searchRow {
-  margin-bottom: var(--space-3);
+  margin-bottom: var(--space-4);
 }
 
 .chipsRow {
@@ -46,7 +46,7 @@
 .sheetForm {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--space-4);
 }
 
 .priceRange {

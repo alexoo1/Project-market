@@ -37,15 +37,15 @@ export default function Navbar() {
 
         <div className={styles.actions}>
           <Link to="/search" className={styles.iconLink} aria-label="Rechercher">
-            <Search size={19} strokeWidth={2} />
+            <Search size={22} strokeWidth={1.75} />
           </Link>
           <Link to="/messages" className={styles.iconLink} aria-label="Messages">
-            <MessageCircle size={19} strokeWidth={2} />
+            <MessageCircle size={22} strokeWidth={1.75} />
           </Link>
           <NotificationBell className={styles.iconLink} />
           <Link to="/sell">
             <Button variant="primary" size="md" className={styles.sellButton}>
-              <Plus size={16} strokeWidth={2.5} />
+              <Plus size={20} strokeWidth={1.75} />
               Vendre
             </Button>
           </Link>

@@ -26,7 +26,7 @@ export default function PaymentMethodPicker({ value, onChange, label = "Moyen de
               onClick={() => onChange(m.value)}
               className={[styles.option, active ? styles.active : ""].filter(Boolean).join(" ")}
             >
-              <Icon size={18} strokeWidth={2} aria-hidden="true" />
+              <Icon size={20} strokeWidth={1.75} aria-hidden="true" />
               <span>{PAYMENT_METHOD_LABELS[m.value]}</span>
             </button>
           );

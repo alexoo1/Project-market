@@ -18,7 +18,7 @@ export default function NotificationBell({ className = "" }) {
 
   return (
     <Link to="/notifications" aria-label="Notifications" className={[styles.bell, className].filter(Boolean).join(" ")}>
-      <Bell size={19} strokeWidth={2} />
+      <Bell size={22} strokeWidth={1.75} />
       {count > 0 && <span className={styles.badge}>{count > 9 ? "9+" : count}</span>}
     </Link>
   );

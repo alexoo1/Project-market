@@ -17,7 +17,7 @@ export default function BottomNav() {
         item.isCenter ? (
           <div key={item.to} className={styles.centerSlot}>
             <NavLink to={item.to} className={styles.fab} aria-label={item.label}>
-              <item.icon size={22} strokeWidth={2.25} aria-hidden="true" />
+              <item.icon size={22} strokeWidth={1.75} aria-hidden="true" />
             </NavLink>
           </div>
         ) : (
@@ -27,7 +27,7 @@ export default function BottomNav() {
             end={item.to === "/"}
             className={({ isActive }) => [styles.item, isActive ? styles.active : ""].filter(Boolean).join(" ")}
           >
-            <item.icon size={21} strokeWidth={2} aria-hidden="true" />
+            <item.icon size={22} strokeWidth={1.75} aria-hidden="true" />
             <span>{item.label}</span>
           </NavLink>
         )

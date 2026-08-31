@@ -158,7 +158,7 @@ export default function SearchPage() {
           </Select>
 
           <Button fullWidth size="lg" onClick={applyFilters}>
-            <SearchIcon size={16} strokeWidth={2} /> Appliquer
+            <SearchIcon size={20} strokeWidth={1.75} /> Appliquer
           </Button>
         </div>
       </BottomSheet>

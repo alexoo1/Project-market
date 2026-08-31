@@ -19,7 +19,7 @@ export default function Input({
         </label>
       )}
       <div className={styles.field}>
-        {Icon && <Icon size={18} strokeWidth={2} className={styles.icon} aria-hidden="true" />}
+        {Icon && <Icon size={20} strokeWidth={1.75} className={styles.icon} aria-hidden="true" />}
         <input
           id={id}
           className={[styles.input, Icon ? styles.withIcon : "", error ? styles.hasError : "", className]

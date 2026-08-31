@@ -258,11 +258,11 @@ export default function SellPage() {
       <div className={styles.footer}>
         {step < STEPS.length - 1 ? (
           <Button fullWidth size="lg" disabled={!stepValid || uploading} onClick={goNext}>
-            Continuer <ArrowRight size={16} strokeWidth={2.5} />
+            Continuer <ArrowRight size={20} strokeWidth={1.75} />
           </Button>
         ) : (
           <Button fullWidth size="lg" loading={busy} onClick={handlePublish}>
-            <Check size={16} strokeWidth={2.5} /> {isEditMode ? "Enregistrer les modifications" : "Publier l'annonce"}
+            <Check size={20} strokeWidth={1.75} /> {isEditMode ? "Enregistrer les modifications" : "Publier l'annonce"}
           </Button>
         )}
       </div>
@@ -288,7 +288,7 @@ function StepPhotos({ images, uploading, fileInputRef, onSelect, onRemove }) {
           <div key={idx} className={styles.photoTile}>
             <img src={url} alt="" />
             <button type="button" onClick={() => onRemove(idx)} className={styles.photoRemove} aria-label="Retirer la photo">
-              <X size={12} strokeWidth={2.5} />
+              <X size={12} strokeWidth={1.75} />
             </button>
           </div>
         ))}

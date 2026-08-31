@@ -15,7 +15,7 @@ export default function Select({ label, className = "", containerClassName = "",
         <select id={id} className={[styles.select, className].filter(Boolean).join(" ")} {...rest}>
           {children}
         </select>
-        <ChevronDown size={18} strokeWidth={2} className={styles.chevron} aria-hidden="true" />
+        <ChevronDown size={20} strokeWidth={1.75} className={styles.chevron} aria-hidden="true" />
       </div>
     </div>
   );

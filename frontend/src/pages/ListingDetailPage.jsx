@@ -151,7 +151,7 @@ export default function ListingDetailPage() {
         </div>
 
         <p className={styles.location}>
-          <MapPin size={14} strokeWidth={2} aria-hidden="true" /> {listing.city}
+          <MapPin size={14} strokeWidth={1.75} aria-hidden="true" /> {listing.city}
         </p>
 
         <p className={styles.description}>{listing.description}</p>
@@ -172,10 +172,10 @@ export default function ListingDetailPage() {
         {isOwner && (
           <div className={styles.ownerActions}>
             <Button variant="secondary" onClick={() => navigate(`/sell/${id}`)}>
-              <Pencil size={15} strokeWidth={2} /> Modifier
+              <Pencil size={20} strokeWidth={1.75} /> Modifier
             </Button>
             <Button variant="danger" onClick={handleDelete} loading={busy}>
-              <Trash2 size={15} strokeWidth={2} /> Supprimer
+              <Trash2 size={20} strokeWidth={1.75} /> Supprimer
             </Button>
           </div>
         )}
@@ -185,7 +185,7 @@ export default function ListingDetailPage() {
         <div className={styles.actionBar}>
           <IconButton icon={MessageCircle} label="Envoyer un message" variant="solid" onClick={handleMessage} />
           <Button variant="secondary" onClick={() => setShowOffer(true)} className={styles.offerButton}>
-            <Tag size={15} strokeWidth={2} /> Faire une offre
+            <Tag size={20} strokeWidth={1.75} /> Faire une offre
           </Button>
           <Button variant="primary" onClick={openBuySheet} className={styles.buyButton}>
             Acheter

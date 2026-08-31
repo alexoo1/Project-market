@@ -1,5 +1,5 @@
 .page {
-  padding: var(--space-4) var(--space-4) 88px;
+  padding: var(--space-4) var(--page-margin) 88px;
   max-width: 1080px;
   margin: 0 auto;
   min-height: 100dvh;
@@ -80,7 +80,7 @@
   width: 100%;
   min-height: var(--tap-target-min);
   padding: 0 var(--space-4) 0 42px;
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-md);
   border: 1.5px solid var(--color-border);
   background: var(--color-surface);
   font-size: var(--text-md);
@@ -94,7 +94,7 @@
 }
 
 .searchInput:focus-visible {
-  border-color: var(--color-gold);
+  border-color: var(--color-coral);
 }
 
 .sectionLabel {
@@ -156,7 +156,7 @@
 }
 
 .tileName {
-  font-family: var(--font-heading);
+  font-family: var(--font-body);
   font-size: var(--text-md);
   font-weight: 700;
   color: var(--color-ink);

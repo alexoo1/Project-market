@@ -88,10 +88,10 @@ export default function UserProfilePage() {
         </div>
         <div className={styles.trustRow}>
           {profile.city && (
-            <span className={styles.trustItem}><MapPin size={13} strokeWidth={2} /> {profile.city}</span>
+            <span className={styles.trustItem}><MapPin size={13} strokeWidth={1.75} /> {profile.city}</span>
           )}
           <span className={styles.trustItem}>
-            <Calendar size={13} strokeWidth={2} /> Membre depuis {new Date(profile.created_at).getFullYear()}
+            <Calendar size={13} strokeWidth={1.75} /> Membre depuis {new Date(profile.created_at).getFullYear()}
           </span>
           {followStatus && (
             <span className={styles.trustItem}>{followStatus.followers_count} abonné{followStatus.followers_count > 1 ? "s" : ""}</span>
@@ -109,7 +109,7 @@ export default function UserProfilePage() {
               {followStatus?.following ? "Ne plus suivre" : "Suivre"}
             </Button>
             <Button variant="secondary" onClick={() => navigate(`/messages`)}>
-              <MessageSquare size={15} strokeWidth={2} /> Message
+              <MessageSquare size={20} strokeWidth={1.75} /> Message
             </Button>
           </div>
         )}

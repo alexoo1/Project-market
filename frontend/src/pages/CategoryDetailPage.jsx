@@ -104,10 +104,10 @@ export default function CategoryDetailPage() {
             onClick={() => openSearch(id, parent?.name)}
           >
             <span className={styles.rowIcon}>
-              <Grid3x3 size={18} strokeWidth={1.75} />
+              <Grid3x3 size={20} strokeWidth={1.75} />
             </span>
             <span className={styles.rowName}>Tous</span>
-            <ChevronRight size={18} strokeWidth={1.75} className={styles.chevron} aria-hidden="true" />
+            <ChevronRight size={20} strokeWidth={1.75} className={styles.chevron} aria-hidden="true" />
           </button>
 
           {children.map((c) => {
@@ -120,10 +120,10 @@ export default function CategoryDetailPage() {
                 onClick={() => openSearch(c.id, c.name)}
               >
                 <span className={styles.rowIcon}>
-                  <Icon size={18} strokeWidth={1.75} />
+                  <Icon size={20} strokeWidth={1.75} />
                 </span>
                 <span className={styles.rowName}>{c.name}</span>
-                <ChevronRight size={18} strokeWidth={1.75} className={styles.chevron} aria-hidden="true" />
+                <ChevronRight size={20} strokeWidth={1.75} className={styles.chevron} aria-hidden="true" />
               </button>
             );
           })}

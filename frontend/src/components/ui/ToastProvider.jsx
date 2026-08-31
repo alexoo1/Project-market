@@ -54,7 +54,7 @@ export function ToastProvider({ children }) {
                 transition={{ duration: 0.22, ease: [0.2, 0, 0, 1] }}
                 className={[styles.toast, styles[t.tone]].join(" ")}
               >
-                <Icon size={18} strokeWidth={2} aria-hidden="true" />
+                <Icon size={20} strokeWidth={1.75} aria-hidden="true" />
                 <span className={styles.message}>{t.message}</span>
                 <button
                   type="button"
@@ -62,7 +62,7 @@ export function ToastProvider({ children }) {
                   onClick={() => dismiss(t.id)}
                   aria-label="Fermer la notification"
                 >
-                  <X size={14} strokeWidth={2} />
+                  <X size={14} strokeWidth={1.75} />
                 </button>
               </motion.div>
             );

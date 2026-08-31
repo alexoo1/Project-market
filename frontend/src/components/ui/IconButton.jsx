@@ -15,7 +15,7 @@ export default function IconButton({
       className={[styles.button, styles[variant], styles[size], className].filter(Boolean).join(" ")}
       {...rest}
     >
-      <Icon size={size === "sm" ? 16 : 20} strokeWidth={2} aria-hidden="true" />
+      <Icon size={size === "sm" ? 20 : 22} strokeWidth={1.75} aria-hidden="true" />
     </button>
   );
 }

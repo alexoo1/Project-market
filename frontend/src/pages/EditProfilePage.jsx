@@ -98,7 +98,7 @@ export default function EditProfilePage() {
               disabled={uploading}
               aria-label="Changer la photo de profil"
             >
-              <Camera size={15} strokeWidth={2} />
+              <Camera size={15} strokeWidth={1.75} />
             </button>
             <input
               ref={fileInputRef}

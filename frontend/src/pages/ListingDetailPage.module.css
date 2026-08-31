@@ -15,7 +15,7 @@
 }
 
 .body {
-  padding: var(--space-4) var(--space-4) 0;
+  padding: var(--space-4) var(--page-margin) 0;
 }
 
 .priceRow {
@@ -27,8 +27,8 @@
 
 .price {
   margin: 0;
-  font-family: var(--font-heading);
-  font-size: var(--text-2xl);
+  font-family: var(--font-body);
+  font-size: var(--text-xl);
   font-weight: 700;
   color: var(--color-ink);
   letter-spacing: -0.02em;
@@ -44,7 +44,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
-  margin: var(--space-3) 0;
+  margin: var(--space-5) 0;
 }
 
 .location {
@@ -142,7 +142,7 @@
 .offerForm {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--space-4);
 }
 
 .deliveryHint {

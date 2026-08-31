@@ -5,8 +5,8 @@
 }
 
 .header {
-  padding: 0 var(--space-4);
-  margin-bottom: var(--space-3);
+  padding: 0 var(--page-margin);
+  margin-bottom: var(--space-5);
 }
 
 .list {
@@ -17,7 +17,7 @@
 .row {
   display: flex;
   gap: var(--space-3);
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-3) var(--page-margin);
   text-decoration: none;
   color: inherit;
   border-bottom: 1px solid var(--color-border);

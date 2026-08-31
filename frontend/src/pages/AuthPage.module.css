@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-6) var(--space-5);
+  padding: var(--space-6) var(--page-margin);
   background:
     radial-gradient(560px circle at 15% -10%, rgba(255, 122, 46, 0.16), transparent 60%),
     radial-gradient(480px circle at 100% 0%, rgba(255, 77, 61, 0.14), transparent 55%),
@@ -30,10 +30,10 @@
 
 .title {
   margin: 0 0 var(--space-6);
-  font-family: var(--font-heading);
-  font-size: var(--text-2xl);
-  font-weight: 700;
-  color: var(--color-lagoon-bright);
+  font-family: var(--font-body);
+  font-size: var(--text-3xl);
+  font-weight: 600;
+  color: var(--color-ink);
 }
 
 .form {

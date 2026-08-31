@@ -73,7 +73,7 @@ export default function ListingCard({ listing, isFavorited = false }) {
           aria-label={favorited ? "Retirer des favoris" : "Ajouter aux favoris"}
           aria-pressed={favorited}
         >
-          <Heart size={16} strokeWidth={2} fill={favorited ? "currentColor" : "none"} />
+          <Heart size={18} strokeWidth={1.75} fill={favorited ? "currentColor" : "none"} />
         </button>
         {listing.condition && (
           <span className={styles.conditionTag}>{CONDITION_LABELS[listing.condition]}</span>

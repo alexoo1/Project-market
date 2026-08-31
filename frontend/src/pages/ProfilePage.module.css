@@ -1,5 +1,5 @@
 .page {
-  padding: var(--space-6) var(--space-4) 88px;
+  padding: var(--space-6) var(--page-margin) 88px;
   max-width: 720px;
   margin: 0 auto;
 }
@@ -33,7 +33,7 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: var(--space-3);
-  margin-top: var(--space-2);
+  margin-top: var(--space-3);
 }
 
 .trustItem {
@@ -179,7 +179,7 @@
 
 .walletBalance {
   margin: 0;
-  font-family: var(--font-heading);
+  font-family: var(--font-body);
   font-size: var(--text-2xl);
   font-weight: 700;
   color: var(--color-ink);
@@ -228,5 +228,5 @@
 .withdrawForm {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--space-4);
 }

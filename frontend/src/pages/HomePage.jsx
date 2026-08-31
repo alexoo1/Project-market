@@ -65,7 +65,7 @@ export default function HomePage() {
           goSearch();
         }}
       >
-        <SearchIcon size={18} strokeWidth={2} className={styles.searchIcon} aria-hidden="true" />
+        <SearchIcon size={20} strokeWidth={1.75} className={styles.searchIcon} aria-hidden="true" />
         <input
           className={styles.searchInput}
           placeholder="Rechercher un article ou un membre"

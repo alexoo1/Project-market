@@ -95,7 +95,7 @@ export default function NotificationsPage() {
                 onClick={() => navigate(routeFor(n))}
               >
                 <div className={styles.icon}>
-                  <Icon size={18} strokeWidth={1.75} />
+                  <Icon size={20} strokeWidth={1.75} />
                 </div>
                 <div className={styles.text}>
                   <p className={styles.title}>{n.title}</p>
